@@ -12,6 +12,8 @@
 [![License: MIT](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE) 
 [![Project Page](https://img.shields.io/badge/Project%20Page-XTransfer-yellow)]()
 
+</div>
+
 This is the official repository of the **XTransfer** (under review). 
 
 **XTransfer: Cross-Modality Model Transfer for Human Sensing with Few Data at the Edge**
