@@ -50,6 +50,7 @@ Deep learning for human sensing on edge systems offers significant opportunities
 | ![pipeline.jpg](assets/system.png) | 
 |:--:| 
 | <div align="left">***Figure 1. Overall pipeline of XTransfer**. Once few sensing data and pre-trained source models are ready, Layer-Wise Search (LWS) control segments source models into layers and uses the pre-search check to decide if repairing is needed. Splice-Repair-Removal (SRR) pipeline then fine-tunes connectors to repair selected layers. Finally, LWS
-control selects and recombines layers of interest into a compact model.*</div> |
+control selects and recombines layers of interest into a compact model.
+*</div> |
 
 
