@@ -14,7 +14,7 @@
 
 </div>
 
-This is the official repository of the **XTransfer** (under review). 
+This is the official repository of the **XTransfer**, a pioneering and scalable method that enables resource-efficient, modality-agnostic model transfer for advancing human sensing edge systems with few data (under review). 
 
 **XTransfer: Cross-Modality Model Transfer for Human Sensing with Few Data at the Edge**
 <br/>
