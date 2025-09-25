@@ -49,11 +49,6 @@ Deep learning for human sensing on edge systems presents significant potential f
 ## 📦 Method
 | ![pipeline.jpg](assets/system.png) | 
 |:--:| 
-| <div align="left">***Figure 1. Overview**. XTransfer transfers source models across modalities with few sensor data through model
-repairing (SRR pipeline) and layer recombining (LWS control). LWS control first segments source models into
-layers and operates layer-wise search across pools. At each pool, the pre-search check decides which layers
-need repairing, then SRR pipeline repairs them and LWS control selects layers of interest. These layers are
-incrementally recombined during the search, resulting in a compact model for enabling human sensing at the
-edge. Subfigures (a)–(c) illustrate the feature space evolution before and after repairing.*</div> |
+| <div align="left">***Figure 1. Overview**. XTransfer transfers source models across modalities with few sensor data through model repairing (SRR pipeline) and layer recombining (LWS control). LWS control first segments source models into layers and operates layer-wise search across pools. At each pool, the pre-search check decides which layers need repairing, then SRR pipeline repairs them and LWS control selects layers of interest. These layers are incrementally recombined during the search, resulting in a compact model for enabling human sensing at the edge. Subfigures (a)–(c) illustrate the feature space evolution before and after repairing.*</div> |
 
 
