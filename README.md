@@ -35,11 +35,11 @@ If you find our work helpful to your research, please consider citing:
 
 ```shell
 @article{Yu_2025,
-  title={XTransfer: Cross-Modality Model Transfer for Human Sensing with Few Data at the Edge},
-  author={Yu Zhang and Xi Zhang and Hualin Zhou and Xinyuan Chen and Shang Gao and Hong Jia and Jianfei Yang and Yuankai Qi and Tao Gu},
-  eprint={2506.22726},
-  archivePrefix={arXiv},
-  year={2025}
+      title={XTransfer: Modality-Agnostic Few-Shot Model Transfer for Human Sensing at the Edge}, 
+      author={Yu Zhang and Xi Zhang and Hualin zhou and Xinyuan Chen and Shang Gao and Hong Jia and Jianfei Yang and Yuankai Qi and Tao Gu},
+      year={2025},
+      eprint={2506.22726},
+      archivePrefix={arXiv},
 }
 ```
 ## 📝 Abstract 
