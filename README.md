@@ -39,8 +39,8 @@ Deep learning for human sensing on edge systems presents significant potential f
 
 ## 🚀 This Release
 
-This repository provides the method and a single reproducible configuration:
-**source = ResNet18 pre-trained on miniImageNet, target = HHAR** ("Our-Single").
+This repository provides the method and reproducible "Our-Single" configurations:
+**source = ResNet18 pre-trained on miniImageNet, target = HHAR or WESAD**.
 The SRR pipeline (Splice–Repair–Removal) and the Layer-Wise Search (LWS) control
 are implemented under `xtransfer/`.
 
@@ -56,32 +56,38 @@ uv sync          # creates .venv and installs locked dependencies
 
 ## 📂 Dataset & pre-trained model
 
-Large files are not bundled. Download them and place them as below (the repo
-ships only the folder skeleton and the few-shot split file):
+Two target sensing datasets are supported: **HHAR** (IMU) and **WESAD**
+(wearable physiological). Large files are not bundled — download them and place
+them as below (the repo ships only the folder skeleton and the few-shot split files):
 
 ```
 Data/
   HHAR/                      # HHAR raw data, per-user folders a, b, c, ...
+  WESAD/                     # WESAD raw data, per-subject folders S2, S3, ...
 pre-trained_weights/
   miniImageNet/
     model.pth.tar              # source ResNet18 pre-trained on miniImageNet
     anchor_activation_mmc.pkl  # pre-computed anchor MMC statistics for SRR
 ```
 
-Download link (HHAR data + source model + anchor statistics): **<TODO: 网盘链接>**
+Download link (HHAR + WESAD data + source model + anchor statistics): **<TODO: 网盘链接>**
 
-The HHAR few-shot split (`dataloader/target_loader/filelists/HHAR/hhar.pkl`) is
-included. `anchor_activation_mmc.pkl` is a pre-computed artefact used by the
-repair stage.
+The few-shot splits (`dataloader/target_loader/filelists/{HHAR,WESAD}/*.pkl`) are
+included. Both targets reuse the same source model and `anchor_activation_mmc.pkl`
+(the anchor statistics come from the source, not the target).
 
 ## ▶️ Run
 
 ```bash
 # one cell: source miniImageNet ResNet18 -> target HHAR, 5-shot, fold 1
-uv run python run.py --shot 5 --fold 1
+uv run python run.py --dataset HHAR --shot 5 --fold 1
+
+# same on the WESAD target
+uv run python run.py --dataset WESAD --shot 5 --fold 1
 
 # full Leave-One-Out cross-validation sweep, reports per-shot mean accuracy
-uv run python validate_all.py
+uv run python validate_all.py --dataset HHAR
+uv run python validate_all.py --dataset WESAD
 ```
 
 Results (per-layer accuracy, final accuracy, MACs/params) are written to
@@ -92,8 +98,8 @@ Results (per-layer accuracy, final accuracy, MACs/params) are written to
 The method's fixed hyper-parameters live in a single file,
 [`configs/hhar_single.yaml`](configs/hhar_single.yaml) — read it to know exactly
 what a run does. It is merged on top of the schema in
-`xtransfer/config/defaults.py`; only per-run knobs (`--shot`, `--fold`) are
-passed on the command line.
+`xtransfer/config/defaults.py`; only per-run knobs (`--dataset`, `--shot`,
+`--fold`) are passed on the command line.
 
 ## 🗂️ Layout
 

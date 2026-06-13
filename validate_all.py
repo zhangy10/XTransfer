@@ -18,7 +18,6 @@ if _REPO not in sys.path:
 from xtransfer.train import main  # noqa: E402
 
 SOURCE = ("miniImageNet",)
-DATASET = "HHAR"
 
 
 def final_metrics(log_path):
@@ -43,7 +42,8 @@ def final_metrics(log_path):
 
 
 def parse_args():
-    ap = argparse.ArgumentParser(description="XTransfer HHAR LOOCV sweep.")
+    ap = argparse.ArgumentParser(description="XTransfer LOOCV sweep.")
+    ap.add_argument("--dataset", default="HHAR", choices=["HHAR", "WESAD"], help="target sensing dataset")
     ap.add_argument("--shots", type=int, nargs="+", default=[3, 5, 10])
     ap.add_argument("--folds", type=int, nargs="+", default=[1, 3, 6, 10, 12])
     return ap.parse_args()
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     for shot in args.shots:
         per_shot = []
         for fold in args.folds:
-            out_dir = main(SOURCE, dataset=DATASET, epo_id=fold, n_shot=shot)
+            out_dir = main(SOURCE, dataset=args.dataset, epo_id=fold, n_shot=shot)
             m = final_metrics(os.path.join(out_dir, "log_dict.pkl"))
             per_shot.append(m)
             print(f"[shot={shot} fold={fold}] {m}")
