@@ -70,7 +70,8 @@ pre-trained_weights/
     anchor_activation_mmc.pkl  # pre-computed anchor MMC statistics for SRR
 ```
 
-Download link (HHAR + WESAD data + source model + anchor statistics): **<TODO: 网盘链接>**
+Download link (HHAR + WESAD data + source model + anchor statistics):
+[Google Drive](https://drive.google.com/drive/folders/1X4wjwNv7FtLp235Mkg46wNrA4FBfIKCl?usp=sharing)
 
 The few-shot splits (`dataloader/target_loader/filelists/{HHAR,WESAD}/*.pkl`) are
 included. Both targets reuse the same source model and `anchor_activation_mmc.pkl`
