@@ -39,10 +39,12 @@ Deep learning for human sensing on edge systems presents significant potential f
 
 ## 🚀 This Release
 
-This repository provides the method and reproducible "Our-Single" configurations:
-**source = ResNet18 pre-trained on miniImageNet, target = HHAR or WESAD**.
-The SRR pipeline (Splice–Repair–Removal) and the Layer-Wise Search (LWS) control
-are implemented under `xtransfer/`.
+This repository provides the XTransfer method implementation — the SRR pipeline
+(Splice–Repair–Removal) and the Layer-Wise Search (LWS) control, under
+`xtransfer/` — together with ready-to-run example configurations. The paper
+evaluates XTransfer across diverse modalities and human-sensing datasets; HHAR
+and WESAD are included here as runnable examples and others follow the same
+recipe.
 
 ## ⚙️ Requirements
 
