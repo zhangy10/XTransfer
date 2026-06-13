@@ -58,9 +58,9 @@ uv sync          # creates .venv and installs locked dependencies
 
 ## 📂 Dataset & pre-trained model
 
-Two target sensing datasets are supported: **HHAR** (IMU) and **WESAD**
-(wearable physiological). Large files are not bundled — download them and place
-them as below (the repo ships only the folder skeleton and the few-shot split files):
+We currently provide the data for two target datasets, **HHAR** and **WESAD**.
+Large files are not bundled — download them and place them as below (the repo
+ships only the folder skeleton and the few-shot split files):
 
 ```
 Data/
