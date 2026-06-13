@@ -1,0 +1,112 @@
+{
+    "miniImageNet": {
+        "num_classes": 100,
+        "backbone": "resnet18",
+        "num_channels": 3
+    },
+    "miniDomainNet": {
+        "num_classes": 126,
+        "backbone": "resnet18",
+        "num_channels": 3
+    },
+    "office31": {
+        "num_classes": 31,
+        "backbone": "resnet18",
+        "num_channels": 3
+    },
+    "officeHome": {
+        "num_classes": 65,
+        "backbone": "resnet18",
+        "num_channels": 3
+    },
+    "miniDomainNet_clipart": {
+        "num_classes": 126,
+        "backbone": "resnet18",
+        "num_channels": 3
+    },
+    "caltech": {
+        "num_classes": 101,
+        "backbone": "resnet18",
+        "num_channels": 3
+    },
+    "mnist": {
+        "num_classes": 10,
+        "backbone": "Conv4"
+    },
+    "mnistm": {
+        "num_classes": 10,
+        "backbone": "Conv4"
+    },
+    "svhn": {
+        "num_classes": 10,
+        "backbone": "Conv4"
+    },
+    "syn": {
+        "num_classes": 10,
+        "backbone": "Conv4"
+    },
+    "usps": {
+        "num_classes": 10,
+        "backbone": "Conv4"
+    },
+    "CIFAR": {
+        "num_classes": 100,
+        "backbone": "resnet10"
+    },
+    "CUB": {
+        "num_classes": 50,
+        "backbone": "resnet10"
+    },
+    "DTD": {
+        "num_classes": 47,
+        "backbone": "resnet10"
+    },
+    "Omniglot": {
+        "num_classes": 50,
+        "backbone": "resnet10"
+    },
+    "QuickDraw": {
+        "num_classes": 50,
+        "backbone": "resnet10"
+    },
+    "MHEALTH": {
+        "num_classes": 10,
+        "backbone": "Conv1d_MHEALTH",
+        "num_channels": 23
+    },
+    "OPPORTUNITY": {
+        "num_classes": 10,
+        "backbone": "resnet181d",
+        "num_channels": 77
+    },
+    "PAMAP2": {
+        "num_classes": 7,
+        "backbone": "Conv1d_PAMAP2",
+        "num_channels": 9
+    },
+    "sEMG": {
+        "num_classes": 6,
+        "backbone": "Conv1d_sEMG",
+        "num_channels": 8
+    },
+    "UniMiB": {
+        "num_classes": 8,
+        "backbone": "Conv1d_UniMiB",
+        "num_channels": 1
+    },
+    "News": {
+        "num_classes": 20,
+        "backbone": "resnet181d",
+        "num_channels": 100
+    },
+    "VoxCeleb": {
+        "num_classes": 100,
+        "backbone": "resnet18",
+        "num_channels": 1
+    },
+    "News_bert": {
+        "num_classes": 20,
+        "backbone": "bert",
+        "num_channels": 512
+    }
+}

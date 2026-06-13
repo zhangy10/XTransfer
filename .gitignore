@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# uv / venv
+.venv/
+
+# data & weights (download separately — see README)
+Data/
+pre-trained_weights/
+
+# large binaries
+*.pkl
+!dataloader/target_loader/filelists/**/*.pkl
+*.pth
+*.pth.tar
+*.pt
+
+# run outputs
+output/
+*.log

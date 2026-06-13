@@ -1,0 +1,44 @@
+# XTransfer "Our-Single" on HHAR — authoritative run config.
+#
+# Read this file to know exactly what a run does. It is merged on top of the
+# schema in rsr/config/defaults.py. Per-run knobs (source models, target
+# dataset, shot, fold) are passed on the command line by run.py; the input
+# size / transform are derived from the source backbone. Everything else —
+# the fixed XTransfer method hyper-parameters — lives here.
+
+SEED: 5
+
+DATALOADER:
+  MODE: 'p'          # few-shot episode sampling mode
+  NUM_WORKERS: 0
+
+RSR:
+  FIT_MODE: 'repair'      # SRR pipeline: Splice -> Repair -> Removal (Pruner)
+  LOSS_MODE: 'repair'     # anchor-based repair loss
+  TEST_METHOD: 'KNN'      # few-shot classifier on latent features
+  NORM_MODE: 'IS'
+  PCA_COMPONENT: 2        # anchor reduced-orthogonal PCA components
+  SEARCH_DEPTH: 3         # layer-wise search depth (paper default)
+  BREAK_DEPTH: 9
+  Conv1D: false
+  REGRESSION: false
+  SBP: false
+  TEST_ACC: true
+  FINETUNE: true          # final linear fine-tune after recombining
+  END_CNN: false
+  BEST_VALIDATION: true
+  RESOURCE_SWITCH: true
+  RESIZER_SWITCH: true
+  ROLLBACK_SWITCH: true
+  BEST_ANCHOR: false
+  POOL_SEED: false
+  QUICK_CHECK: true       # pre-search check acceleration
+  MAX_PRUNE_RANGE: 1.0
+  MAX_RESOURCE: null      # device resource budget (null = unconstrained)
+  INIT_PICK_RANGE: 0.5
+
+TRAN:
+  NUM_EPISODE: 200
+  ROT_NUM_EPISODE: 20
+  RM: true
+  ANCHOR_SELECT_MODE: 'best_pca'

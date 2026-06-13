@@ -1,0 +1,998 @@
+{
+  "resnet18": {
+    "struc": {
+      "0": {
+        "head": [
+          "conv1",
+          "bn1"
+        ],
+        "tail": [
+          "relu",
+          "maxpool"
+        ]
+      },
+      "1": {
+        "head": [
+          "layer1.0"
+        ],
+        "tail": []
+      },
+      "2": {
+        "head": [
+          "layer1.1"
+        ],
+        "tail": []
+      },
+      "3": {
+        "head": [
+          "layer2.0"
+        ],
+        "tail": []
+      },
+      "4": {
+        "head": [
+          "layer2.1"
+        ],
+        "tail": []
+      },
+      "5": {
+        "head": [
+          "layer3.0"
+        ],
+        "tail": []
+      },
+      "6": {
+        "head": [
+          "layer3.1"
+        ],
+        "tail": []
+      },
+      "7": {
+        "head": [
+          "layer4.0"
+        ],
+        "tail": []
+      },
+      "8": {
+        "head": [
+          "layer4.1"
+        ],
+        "tail": []
+      }
+    },
+    "input": {
+      "0": [
+        3,
+        224,
+        224
+      ],
+      "1": [
+        64,
+        56,
+        56
+      ],
+      "2": [
+        64,
+        56,
+        56
+      ],
+      "3": [
+        64,
+        56,
+        56
+      ],
+      "4": [
+        128,
+        28,
+        28
+      ],
+      "5": [
+        128,
+        28,
+        28
+      ],
+      "6": [
+        256,
+        14,
+        14
+      ],
+      "7": [
+        256,
+        14,
+        14
+      ],
+      "8": [
+        512,
+        7,
+        7
+      ]
+    }
+  },
+  "resnet10": {
+    "struc": {
+      "0": {
+        "head": [
+          "conv1",
+          "bn1"
+        ],
+        "tail": [
+          "relu",
+          "maxpool"
+        ]
+      },
+      "1": {
+        "head": [
+          "layer1.0"
+        ],
+        "tail": []
+      },
+      "2": {
+        "head": [
+          "layer2.0"
+        ],
+        "tail": []
+      },
+      "3": {
+        "head": [
+          "layer3.0"
+        ],
+        "tail": []
+      },
+      "4": {
+        "head": [
+          "layer4.0"
+        ],
+        "tail": []
+      }
+    },
+    "input": {
+      "0": [
+        3,
+        84,
+        84
+      ],
+      "1": [
+        64,
+        21,
+        21
+      ],
+      "2": [
+        64,
+        21,
+        21
+      ],
+      "3": [
+        128,
+        11,
+        11
+      ],
+      "4": [
+        256,
+        6,
+        6
+      ]
+    }
+  },
+  "Conv4": {
+    "struc": {
+      "0": {
+        "head": [
+          "trunk.0.C",
+          "trunk.0.BN"
+        ],
+        "tail": [
+          "trunk.0.relu",
+          "trunk.0.pool"
+        ]
+      },
+      "1": {
+        "head": [
+          "trunk.1.C",
+          "trunk.1.BN"
+        ],
+        "tail": [
+          "trunk.1.relu",
+          "trunk.1.pool"
+        ]
+      },
+      "2": {
+        "head": [
+          "trunk.2.C",
+          "trunk.2.BN"
+        ],
+        "tail": [
+          "trunk.2.relu",
+          "trunk.2.pool"
+        ]
+      },
+      "3": {
+        "head": [
+          "trunk.3.C",
+          "trunk.3.BN"
+        ],
+        "tail": [
+          "trunk.3.relu",
+          "trunk.3.pool"
+        ]
+      }
+    },
+    "input": {
+      "0": [
+        3,
+        32,
+        32
+      ],
+      "1": [
+        64,
+        16,
+        16
+      ],
+      "2": [
+        64,
+        8,
+        8
+      ],
+      "3": [
+        64,
+        4,
+        4
+      ]
+    }
+  },
+  "Conv1d_MHEALTH": {
+    "input": {
+      "0": [
+        23,
+        100
+      ],
+      "1": [
+        64,
+        50
+      ],
+      "2": [
+        64,
+        25
+      ],
+      "3": [
+        64,
+        12
+      ]
+    },
+    "struc": {
+      "0": {
+        "head": [
+          "trunk.0.C",
+          "trunk.0.BN"
+        ],
+        "tail": [
+          "trunk.0.relu",
+          "trunk.0.pool"
+        ]
+      },
+      "1": {
+        "head": [
+          "trunk.1.C",
+          "trunk.1.BN"
+        ],
+        "tail": [
+          "trunk.1.relu",
+          "trunk.1.pool"
+        ]
+      },
+      "2": {
+        "head": [
+          "trunk.2.C",
+          "trunk.2.BN"
+        ],
+        "tail": [
+          "trunk.2.relu",
+          "trunk.2.pool"
+        ]
+      },
+      "3": {
+        "head": [
+          "trunk.3.C",
+          "trunk.3.BN"
+        ],
+        "tail": [
+          "trunk.3.relu",
+          "trunk.3.pool"
+        ]
+      }
+    }
+  },
+  "Conv1d_OPPORTUNITY": {
+    "input": {
+      "0": [
+        77,
+        100
+      ],
+      "1": [
+        64,
+        50
+      ],
+      "2": [
+        64,
+        25
+      ],
+      "3": [
+        64,
+        12
+      ]
+    },
+    "struc": {
+      "0": {
+        "head": [
+          "trunk.0.C",
+          "trunk.0.BN"
+        ],
+        "tail": [
+          "trunk.0.relu",
+          "trunk.0.pool"
+        ]
+      },
+      "1": {
+        "head": [
+          "trunk.1.C",
+          "trunk.1.BN"
+        ],
+        "tail": [
+          "trunk.1.relu",
+          "trunk.1.pool"
+        ]
+      },
+      "2": {
+        "head": [
+          "trunk.2.C",
+          "trunk.2.BN"
+        ],
+        "tail": [
+          "trunk.2.relu",
+          "trunk.2.pool"
+        ]
+      },
+      "3": {
+        "head": [
+          "trunk.3.C",
+          "trunk.3.BN"
+        ],
+        "tail": [
+          "trunk.3.relu",
+          "trunk.3.pool"
+        ]
+      }
+    }
+  },
+  "Conv1d_PAMAP2": {
+    "input": {
+      "0": [
+        9,
+        100
+      ],
+      "1": [
+        64,
+        50
+      ],
+      "2": [
+        64,
+        25
+      ],
+      "3": [
+        64,
+        12
+      ]
+    },
+    "struc": {
+      "0": {
+        "head": [
+          "trunk.0.C",
+          "trunk.0.BN"
+        ],
+        "tail": [
+          "trunk.0.relu",
+          "trunk.0.pool"
+        ]
+      },
+      "1": {
+        "head": [
+          "trunk.1.C",
+          "trunk.1.BN"
+        ],
+        "tail": [
+          "trunk.1.relu",
+          "trunk.1.pool"
+        ]
+      },
+      "2": {
+        "head": [
+          "trunk.2.C",
+          "trunk.2.BN"
+        ],
+        "tail": [
+          "trunk.2.relu",
+          "trunk.2.pool"
+        ]
+      },
+      "3": {
+        "head": [
+          "trunk.3.C",
+          "trunk.3.BN"
+        ],
+        "tail": [
+          "trunk.3.relu",
+          "trunk.3.pool"
+        ]
+      }
+    }
+  },
+  "Conv1d_sEMG": {
+    "input": {
+      "0": [
+        8,
+        100
+      ],
+      "1": [
+        64,
+        50
+      ],
+      "2": [
+        64,
+        25
+      ],
+      "3": [
+        64,
+        12
+      ]
+    },
+    "struc": {
+      "0": {
+        "head": [
+          "trunk.0.C",
+          "trunk.0.BN"
+        ],
+        "tail": [
+          "trunk.0.relu",
+          "trunk.0.pool"
+        ]
+      },
+      "1": {
+        "head": [
+          "trunk.1.C",
+          "trunk.1.BN"
+        ],
+        "tail": [
+          "trunk.1.relu",
+          "trunk.1.pool"
+        ]
+      },
+      "2": {
+        "head": [
+          "trunk.2.C",
+          "trunk.2.BN"
+        ],
+        "tail": [
+          "trunk.2.relu",
+          "trunk.2.pool"
+        ]
+      },
+      "3": {
+        "head": [
+          "trunk.3.C",
+          "trunk.3.BN"
+        ],
+        "tail": [
+          "trunk.3.relu",
+          "trunk.3.pool"
+        ]
+      }
+    }
+  },
+  "Conv1d_UniMiB": {
+    "input": {
+      "0": [
+        1,
+        100
+      ],
+      "1": [
+        64,
+        50
+      ],
+      "2": [
+        64,
+        25
+      ],
+      "3": [
+        64,
+        12
+      ]
+    },
+    "struc": {
+      "0": {
+        "head": [
+          "trunk.0.C",
+          "trunk.0.BN"
+        ],
+        "tail": [
+          "trunk.0.relu",
+          "trunk.0.pool"
+        ]
+      },
+      "1": {
+        "head": [
+          "trunk.1.C",
+          "trunk.1.BN"
+        ],
+        "tail": [
+          "trunk.1.relu",
+          "trunk.1.pool"
+        ]
+      },
+      "2": {
+        "head": [
+          "trunk.2.C",
+          "trunk.2.BN"
+        ],
+        "tail": [
+          "trunk.2.relu",
+          "trunk.2.pool"
+        ]
+      },
+      "3": {
+        "head": [
+          "trunk.3.C",
+          "trunk.3.BN"
+        ],
+        "tail": [
+          "trunk.3.relu",
+          "trunk.3.pool"
+        ]
+      }
+    }
+  },
+  "resnet181d_news": {
+    "struc": {
+      "0": {
+        "head": [
+          "conv1",
+          "bn1"
+        ],
+        "tail": [
+          "relu",
+          "maxpool"
+        ]
+      },
+      "1": {
+        "head": [
+          "layer1.0"
+        ],
+        "tail": []
+      },
+      "2": {
+        "head": [
+          "layer1.1"
+        ],
+        "tail": []
+      },
+      "3": {
+        "head": [
+          "layer2.0"
+        ],
+        "tail": []
+      },
+      "4": {
+        "head": [
+          "layer2.1"
+        ],
+        "tail": []
+      },
+      "5": {
+        "head": [
+          "layer3.0"
+        ],
+        "tail": []
+      },
+      "6": {
+        "head": [
+          "layer3.1"
+        ],
+        "tail": []
+      },
+      "7": {
+        "head": [
+          "layer4.0"
+        ],
+        "tail": []
+      },
+      "8": {
+        "head": [
+          "layer4.1"
+        ],
+        "tail": []
+      }
+    },
+    "input": {
+      "0": [
+        100,
+        1000
+      ],
+      "1": [
+        64,
+        250
+      ],
+      "2": [
+        64,
+        250
+      ],
+      "3": [
+        64,
+        250
+      ],
+      "4": [
+        128,
+        125
+      ],
+      "5": [
+        128,
+        125
+      ],
+      "6": [
+        256,
+        63
+      ],
+      "7": [
+        256,
+        63
+      ],
+      "8": [
+        512,
+        32
+      ]
+    }
+  },
+  "resnet181d": {
+    "struc": {
+      "0": {
+        "head": [
+          "conv1",
+          "bn1"
+        ],
+        "tail": [
+          "relu",
+          "maxpool"
+        ]
+      },
+      "1": {
+        "head": [
+          "layer1.0"
+        ],
+        "tail": []
+      },
+      "2": {
+        "head": [
+          "layer1.1"
+        ],
+        "tail": []
+      },
+      "3": {
+        "head": [
+          "layer2.0"
+        ],
+        "tail": []
+      },
+      "4": {
+        "head": [
+          "layer2.1"
+        ],
+        "tail": []
+      },
+      "5": {
+        "head": [
+          "layer3.0"
+        ],
+        "tail": []
+      },
+      "6": {
+        "head": [
+          "layer3.1"
+        ],
+        "tail": []
+      },
+      "7": {
+        "head": [
+          "layer4.0"
+        ],
+        "tail": []
+      },
+      "8": {
+        "head": [
+          "layer4.1"
+        ],
+        "tail": []
+      }
+    },
+    "input": {
+      "0": [
+        77,
+        1000
+      ],
+      "1": [
+        64,
+        250
+      ],
+      "2": [
+        64,
+        250
+      ],
+      "3": [
+        64,
+        250
+      ],
+      "4": [
+        128,
+        125
+      ],
+      "5": [
+        128,
+        125
+      ],
+      "6": [
+        256,
+        63
+      ],
+      "7": [
+        256,
+        63
+      ],
+      "8": [
+        512,
+        32
+      ]
+    }
+  },
+  "bert": {
+    "struc": {
+      "0": {
+        "head": [
+          "bert.encoder.layer.0"
+        ],
+        "tail": []
+      },
+      "1": {
+        "head": [
+          "bert.encoder.layer.1"
+        ],
+        "tail": []
+      },
+      "2": {
+        "head": [
+          "bert.encoder.layer.2"
+        ],
+        "tail": []
+      },
+      "3": {
+        "head": [
+          "bert.encoder.layer.3"
+        ],
+        "tail": []
+      },
+      "4": {
+        "head": [
+          "bert.encoder.layer.4"
+        ],
+        "tail": []
+      },
+      "5": {
+        "head": [
+          "bert.encoder.layer.5"
+        ],
+        "tail": []
+      },
+      "6": {
+        "head": [
+          "bert.encoder.layer.6"
+        ],
+        "tail": []
+      },
+      "7": {
+        "head": [
+          "bert.encoder.layer.7"
+        ],
+        "tail": []
+      },
+      "8": {
+        "head": [
+          "bert.encoder.layer.8"
+        ],
+        "tail": []
+      },
+      "9": {
+        "head": [
+          "bert.encoder.layer.9"
+        ],
+        "tail": []
+      },
+      "10": {
+        "head": [
+          "bert.encoder.layer.10"
+        ],
+        "tail": []
+      },
+      "11": {
+        "head": [
+          "bert.encoder.layer.11"
+        ],
+        "tail": []
+      },
+      "12": {
+        "head": [
+          "bert.encoder.layer.12"
+        ],
+        "tail": []
+      },
+      "13": {
+        "head": [
+          "bert.encoder.layer.13"
+        ],
+        "tail": []
+      },
+      "14": {
+        "head": [
+          "bert.encoder.layer.14"
+        ],
+        "tail": []
+      },
+      "15": {
+        "head": [
+          "bert.encoder.layer.15"
+        ],
+        "tail": []
+      },
+      "16": {
+        "head": [
+          "bert.encoder.layer.16"
+        ],
+        "tail": []
+      },
+      "17": {
+        "head": [
+          "bert.encoder.layer.17"
+        ],
+        "tail": []
+      },
+      "18": {
+        "head": [
+          "bert.encoder.layer.18"
+        ],
+        "tail": []
+      },
+      "19": {
+        "head": [
+          "bert.encoder.layer.19"
+        ],
+        "tail": []
+      },
+      "20": {
+        "head": [
+          "bert.encoder.layer.20"
+        ],
+        "tail": []
+      },
+      "21": {
+        "head": [
+          "bert.encoder.layer.21"
+        ],
+        "tail": []
+      },
+      "22": {
+        "head": [
+          "bert.encoder.layer.22"
+        ],
+        "tail": []
+      },
+      "23": {
+        "head": [
+          "bert.encoder.layer.23"
+        ],
+        "tail": []
+      }
+    },
+    "input": {
+      "0": [
+        512,
+        512
+      ],
+      "1": [
+        512,
+        512
+      ],
+      "2": [
+        512,
+        512
+      ],
+      "3": [
+        512,
+        512
+      ],
+      "4": [
+        512,
+        512
+      ],
+      "5": [
+        512,
+        512
+      ],
+      "6": [
+        512,
+        512
+      ],
+      "7": [
+        512,
+        512
+      ],
+      "8": [
+        512,
+        512
+      ],
+      "9": [
+        512,
+        512
+      ],
+      "10": [
+        512,
+        512
+      ],
+      "11": [
+        512,
+        512
+      ],
+      "12": [
+        512,
+        512
+      ],
+      "13": [
+        512,
+        512
+      ],
+      "14": [
+        512,
+        512
+      ],
+      "15": [
+        512,
+        512
+      ],
+      "16": [
+        512,
+        512
+      ],
+      "17": [
+        512,
+        512
+      ],
+      "18": [
+        512,
+        512
+      ],
+      "19": [
+        512,
+        512
+      ],
+      "20": [
+        512,
+        512
+      ],
+      "21": [
+        512,
+        512
+      ],
+      "22": [
+        512,
+        512
+      ],
+      "23": [
+        512,
+        512
+      ]
+    }
+  }
+}

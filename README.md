@@ -1,6 +1,7 @@
 
 
 
+
 <div align="center">   
 
 # XTransfer: Modality-Agnostic Few-Shot Model Transfer for Human Sensing at the Edge
@@ -36,6 +37,80 @@ Deep learning for human sensing on edge systems presents significant potential f
 | <div align="left">***Figure 1. Overview**. XTransfer transfers source models across modalities with few sensor data through model repairing (SRR pipeline) and layer recombining (LWS control).  LWS control first segments source models into layers and operates layer-wise search across pools. At each pool, the pre-search check decides which layers need repairing, then SRR pipeline repairs them and LWS control selects layers of interest. These layers are incrementally recombined during the search, restructuring models for enabling human sensing at the edge. Subfigures (a)–(c) illustrate the feature space evolution before and after repairing.*</div> |
 
 
+## 🚀 This Release
+
+This repository provides the method and a single reproducible configuration:
+**source = ResNet18 pre-trained on miniImageNet, target = HHAR** ("Our-Single").
+The SRR pipeline (Splice–Repair–Removal) and the Layer-Wise Search (LWS) control
+are implemented under `xtransfer/`.
+
+## ⚙️ Requirements
+
+Dependencies are managed with [uv](https://docs.astral.sh/uv/). A CUDA GPU is
+recommended (tested on an RTX 4090, CUDA 11.8, PyTorch 2.5.1).
+
+```bash
+# install uv if needed:  pip install uv
+uv sync          # creates .venv and installs locked dependencies
+```
+
+## 📂 Dataset & pre-trained model
+
+Large files are not bundled. Download them and place them as below (the repo
+ships only the folder skeleton and the few-shot split file):
+
+```
+Data/
+  HHAR/                      # HHAR raw data, per-user folders a, b, c, ...
+pre-trained_weights/
+  miniImageNet/
+    model.pth.tar              # source ResNet18 pre-trained on miniImageNet
+    anchor_activation_mmc.pkl  # pre-computed anchor MMC statistics for SRR
+```
+
+Download link (HHAR data + source model + anchor statistics): **<TODO: 网盘链接>**
+
+The HHAR few-shot split (`dataloader/target_loader/filelists/HHAR/hhar.pkl`) is
+included. `anchor_activation_mmc.pkl` is a pre-computed artefact used by the
+repair stage.
+
+## ▶️ Run
+
+```bash
+# one cell: source miniImageNet ResNet18 -> target HHAR, 5-shot, fold 1
+uv run python run.py --shot 5 --fold 1
+
+# full Leave-One-Out cross-validation sweep, reports per-shot mean accuracy
+uv run python validate_all.py
+```
+
+Results (per-layer accuracy, final accuracy, MACs/params) are written to
+`output/<run>/log_dict.pkl` and the console.
+
+## 🔧 Configuration
+
+The method's fixed hyper-parameters live in a single file,
+[`configs/hhar_single.yaml`](configs/hhar_single.yaml) — read it to know exactly
+what a run does. It is merged on top of the schema in
+`xtransfer/config/defaults.py`; only per-run knobs (`--shot`, `--fold`) are
+passed on the command line.
+
+## 🗂️ Layout
+
+```
+xtransfer/            # the method
+  core.py             #   MatchingNet: SRR pipeline + LWS orchestration
+  trans.py            #   connectors, repair/rotation transforms, fine-tuner
+  encoder.py          #   generative transfer module (AutoEncoder connector)
+  model_builder.py    #   source-model loader
+  torch_pruning/      #   PCA-based channel removal (SRR "Removal")
+  config/, paths.py   #   config schema + data/model paths
+dataloader/, modeling/, utils/   # supporting code
+configs/hhar_single.yaml          # run config
+run.py, validate_all.py           # entry points
+```
+
+
 ## 🔗 Citation
 If you find our work helpful to your research, please consider citing:
 
@@ -49,6 +124,3 @@ If you find our work helpful to your research, please consider citing:
       series={ICML '26},
 }
 ```
-
-
-

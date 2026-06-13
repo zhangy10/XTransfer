@@ -1,0 +1,36 @@
+[project]
+name = "xtransfer"
+version = "0.1.0"
+description = "XTransfer: Modality-Agnostic Few-Shot Model Transfer for Human Sensing at the Edge (HHAR release)"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "torch==2.5.1",
+    "torchvision==0.20.1",
+    "numpy==1.24.3",
+    "scipy==1.11.4",
+    "pandas==2.1.4",
+    "scikit-learn==1.2.2",
+    "opencv-python==4.9.0.80",
+    "pillow==10.0.1",
+    "pyts==0.13.0",
+    "thop==0.1.1.post2209072238",
+    "yacs==0.1.8",
+    "pyyaml==6.0.1",
+    "tqdm==4.66.1",
+    "psutil==5.9.7",
+    "pynvml>=11.5.0",
+    "six>=1.16.0",
+    "h5py>=3.16.0",
+]
+
+[tool.uv]
+package = false
+
+[[tool.uv.index]]
+name = "pytorch-cu118"
+url = "https://download.pytorch.org/whl/cu118"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu118" }
+torchvision = { index = "pytorch-cu118" }
