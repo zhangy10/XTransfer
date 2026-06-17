@@ -43,7 +43,7 @@ def final_metrics(log_path):
 
 def parse_args():
     ap = argparse.ArgumentParser(description="XTransfer LOOCV sweep.")
-    ap.add_argument("--dataset", default="HHAR", choices=["HHAR", "WESAD"], help="target sensing dataset")
+    ap.add_argument("--dataset", default="HHAR", choices=["HHAR"], help="target sensing dataset")
     ap.add_argument("--shots", type=int, nargs="+", default=[3, 5, 10])
     ap.add_argument("--folds", type=int, nargs="+", default=[1, 3, 6, 10, 12])
     return ap.parse_args()

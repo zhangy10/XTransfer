@@ -41,10 +41,9 @@ Deep learning for human sensing on edge systems presents significant potential f
 
 This repository provides the XTransfer method implementation — the SRR pipeline
 (Splice–Repair–Removal) and the Layer-Wise Search (LWS) control, under
-`xtransfer/` — together with ready-to-run example configurations. The paper
-evaluates XTransfer across diverse modalities and human-sensing datasets; HHAR
-and WESAD are included here as runnable examples and others follow the same
-recipe.
+`xtransfer/` — together with a ready-to-run example. The paper evaluates
+XTransfer across diverse modalities and human-sensing datasets; this release
+includes a public verification setup based on HHAR.
 
 ## ⚙️ Requirements
 
@@ -58,39 +57,37 @@ uv sync          # creates .venv and installs locked dependencies
 
 ## 📂 Dataset & pre-trained model
 
-We currently provide the data for two target datasets, **HHAR** and **WESAD**.
+The paper includes both public and private datasets. This release provides a
+public verification setup based on HHAR, while private datasets are pending to be
+released due to privacy and ethics constraints.
+
 Large files are not bundled — download them and place them as below (the repo
-ships only the folder skeleton and the few-shot split files):
+ships only the folder skeleton and the few-shot split file):
 
 ```
 Data/
   HHAR/                      # HHAR raw data, per-user folders a, b, c, ...
-  WESAD/                     # WESAD raw data, per-subject folders S2, S3, ...
 pre-trained_weights/
   miniImageNet/
     model.pth.tar              # source ResNet18 pre-trained on miniImageNet
     anchor_activation_mmc.pkl  # pre-computed anchor MMC statistics for SRR
 ```
 
-Download link (HHAR + WESAD data + source model + anchor statistics):
+Download link (HHAR data + source model + anchor statistics):
 [Google Drive](https://drive.google.com/drive/folders/1X4wjwNv7FtLp235Mkg46wNrA4FBfIKCl?usp=sharing)
 
-The few-shot splits (`dataloader/target_loader/filelists/{HHAR,WESAD}/*.pkl`) are
-included. Both targets reuse the same source model and `anchor_activation_mmc.pkl`
-(the anchor statistics come from the source, not the target).
+The HHAR few-shot split (`dataloader/target_loader/filelists/HHAR/hhar.pkl`) is
+included. `anchor_activation_mmc.pkl` is a pre-computed artefact used by the
+repair stage.
 
 ## ▶️ Run
 
 ```bash
-# one cell: source miniImageNet ResNet18 -> target HHAR, 5-shot, fold 1
+# source miniImageNet ResNet18 -> target HHAR, 5-shot, fold 1
 uv run python run.py --dataset HHAR --shot 5 --fold 1
-
-# same on the WESAD target
-uv run python run.py --dataset WESAD --shot 5 --fold 1
 
 # full Leave-One-Out cross-validation sweep, reports per-shot mean accuracy
 uv run python validate_all.py --dataset HHAR
-uv run python validate_all.py --dataset WESAD
 ```
 
 Results (per-layer accuracy, final accuracy, MACs/params) are written to

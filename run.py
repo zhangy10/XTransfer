@@ -21,7 +21,7 @@ from xtransfer.train import main, DEFAULT_CONFIG  # noqa: E402
 
 def parse_args():
     ap = argparse.ArgumentParser(description="XTransfer single run (Our-Single).")
-    ap.add_argument("--dataset", default="HHAR", choices=["HHAR", "WESAD"], help="target sensing dataset")
+    ap.add_argument("--dataset", default="HHAR", choices=["HHAR"], help="target sensing dataset")
     ap.add_argument("--shot", type=int, default=5, help="few-shot support size (3/5/10)")
     ap.add_argument("--fold", type=int, default=1, help="LOOCV fold / episode id")
     ap.add_argument("--config", default=DEFAULT_CONFIG, help="method config yaml")
