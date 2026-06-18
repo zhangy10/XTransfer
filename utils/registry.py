@@ -67,3 +67,4 @@ class Registry:
 
     def registered_names(self):
         return list(self._obj_map.keys())
+

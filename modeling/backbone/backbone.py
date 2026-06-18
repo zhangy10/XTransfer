@@ -15,3 +15,4 @@ class Backbone(nn.Module):
         if self.__dict__.get("_out_features") is None:
             return None
         return self._out_features
+

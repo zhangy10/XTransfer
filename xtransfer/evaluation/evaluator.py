@@ -121,3 +121,4 @@ class Classification(EvaluatorBase):
             print(f"Confusion matrix is saved to {save_path}")
         self.reset()
         return results
+

@@ -9,3 +9,4 @@ def data_loader(fn):
             setattr(self, attr_name, fn(self))
         return getattr(self, attr_name)
     return _data_loader
+

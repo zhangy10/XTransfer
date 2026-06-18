@@ -389,3 +389,4 @@ class NetLoader(Module):
 
     def val_dataloader(self):
         return self.test_loader
+

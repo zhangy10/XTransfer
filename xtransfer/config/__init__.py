@@ -19,3 +19,4 @@ def clean_cfg(cfg, trainer):
         if key == "NAME" or key == trainer.upper():
             continue
         cfg.TRAINER.pop(key, None)
+

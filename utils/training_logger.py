@@ -115,3 +115,4 @@ class RSRLogger:
 
     def save(self):
         save_dict(self.dic, self.save_path)
+

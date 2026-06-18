@@ -297,3 +297,4 @@ def add_global_metrics(name, metric_fn):
     prune_embedding.add_metric(name, metric_fn)
     prune_parameter.add_metric(name, metric_fn)
     prune_multihead_attention.add_metric(name, metric_fn)
+

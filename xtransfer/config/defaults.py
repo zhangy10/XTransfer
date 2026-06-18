@@ -104,3 +104,4 @@ _C.TRAN.NUM_EPISODE = 200
 _C.TRAN.ROT_NUM_EPISODE = 20
 _C.TRAN.LOSS = 'Npair&PositiveAnchor'
 _C.TRAN.RM = True
+

@@ -87,3 +87,4 @@ class ModelSummary(object):
         self.get_parameter_nums()
 
         self.make_summary()
+

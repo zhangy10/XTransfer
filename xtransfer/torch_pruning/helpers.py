@@ -243,3 +243,4 @@ class VectorSum:
 
     def reset(self):
         self._results = {}
+

@@ -48,3 +48,4 @@ class MLP(nn.Module):
 @HEAD_REGISTRY.register()
 def mlp(**kwargs):
     return MLP(**kwargs)
+

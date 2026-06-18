@@ -350,3 +350,4 @@ def init_network_weights(model, init_type="normal", gain=0.02):
                 nn.init.constant_(m.bias.data, 0.0)
 
     model.apply(_init_func)
+

@@ -1267,3 +1267,4 @@ if __name__ == "__main__":
 
     net = resnet18()
     PruneTrans.calculate_flops(net, input=torch.rand(2, 3, 224, 224))
+

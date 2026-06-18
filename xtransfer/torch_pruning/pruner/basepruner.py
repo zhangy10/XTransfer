@@ -253,3 +253,4 @@ class GlobalPruner(MetaPruner):
                 else:
                     n_prune = int(layer_channels - min_layer_channels)
         return n_prune
+

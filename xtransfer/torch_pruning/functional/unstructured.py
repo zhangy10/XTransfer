@@ -55,3 +55,4 @@ def mask_bias(layer, mask, inplace=True):
         layer.register_buffer( 'bias_mask', mask )
     layer.register_forward_pre_hook( _mask_bias_hook )
     return layer
+

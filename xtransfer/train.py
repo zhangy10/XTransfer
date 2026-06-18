@@ -172,3 +172,4 @@ def main(model_name, dataset, epo_id=0, n_shot=5, config_file=DEFAULT_CONFIG):
     torch.save(model, os.path.join(output_dir, 'model.pt'))
 
     return output_dir
+

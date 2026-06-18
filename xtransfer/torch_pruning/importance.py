@@ -294,3 +294,4 @@ class LAMPImportance(Importance):
             return importance
         elif self.reduction == "mean":
             return importance / n_layers
+

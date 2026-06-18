@@ -176,3 +176,4 @@ if __name__ == "__main__":
     model = ConvHHAR()
     output = model(input)
     print(output.size())
+

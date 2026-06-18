@@ -522,3 +522,4 @@ class PositiveNegativeLoss(torch.nn.Module):
 
         self.episode += 1
         return loss
+

@@ -95,3 +95,4 @@ def setup_logger(output=None):
     if isinstance(sys.stdout, Logger):
         sys.stdout = tmp
     sys.stdout = Logger(fpath)
+

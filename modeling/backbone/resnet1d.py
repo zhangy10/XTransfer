@@ -226,3 +226,4 @@ def resnet181d(**kwargs):
     model = ResNet(block=BasicBlock, layers=[2, 2, 2, 2], **kwargs)
 
     return model
+

@@ -218,3 +218,4 @@ def get_oxiod_few_data(resize):
                       shuffle=False)
 
     return train, test
+

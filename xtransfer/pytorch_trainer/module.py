@@ -76,3 +76,4 @@ class Module(nn.Module):
 
     def summarize(self, input_size):
         summary(self, input_size, device="cpu")
+

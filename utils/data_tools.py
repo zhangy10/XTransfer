@@ -47,3 +47,4 @@ if __name__ == "__main__":
     except_classes = [0, 1, 9, 10, 11, 12, 13, 14]
     a = map_label(except_classes, 3)
     print(a)
+

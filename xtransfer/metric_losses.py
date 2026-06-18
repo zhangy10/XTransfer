@@ -960,3 +960,4 @@ class CEClassLoss(torch.nn.Module):
             cross-entropy loss (torch.Tensor(), batch-averaged by default)
         """
         return self.ce_loss(self.mapper(batch), labels.type(torch.cuda.LongTensor))
+

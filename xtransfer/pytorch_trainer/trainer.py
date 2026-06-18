@@ -236,3 +236,4 @@ class Trainer():
         # }
         # torch.save(self.model.state_dict(), filepath)
         torch.save(self.model.model.backbone.state_dict(), filepath)
+

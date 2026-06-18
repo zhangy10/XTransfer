@@ -201,3 +201,4 @@ def euler_to_quaternion(e, order):
         result *= -1
 
     return result.reshape(original_shape)
+

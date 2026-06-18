@@ -265,3 +265,4 @@ class gt_Trainer():
             'state_dict': self.model.state_dict(),
         }
         torch.save(checkpoint, filepath)
+
