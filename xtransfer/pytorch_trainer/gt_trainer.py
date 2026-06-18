@@ -74,13 +74,11 @@ class gt_Trainer():
         self.__load_checkpoint(checkpoint, self.model, self.optimizer)
         if self.use_amp:
             self.model, self.optimizer = self.model.configure_apex(amp, self.model, self.optimizer, "O1")
-        # self.model.train()
         self.model.train()
         dataloader = model.train_dataloader()
         samples = len(dataloader.dataset)
         batch_size = dataloader.batch_size
 
-        # self.validate(self.model, fast_validate=True)
         for epoch in range(self.epochs):
             self.current_epoch = epoch
             self.model.on_epoch_start(epoch)

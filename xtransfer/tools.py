@@ -1,7 +1,5 @@
 from sklearn.metrics.pairwise import paired_distances, pairwise_distances_chunked
 from sklearn.decomposition import PCA
-# from sklearn.decomposition import KernelPCA
-# from sklearn.decomposition import SparsePCA as PCA
 
 from sklearn.metrics import silhouette_samples, silhouette_score, confusion_matrix
 from sklearn.metrics.cluster._unsupervised import _silhouette_reduce
@@ -16,7 +14,6 @@ from scipy.optimize import linear_sum_assignment
 import functools
 import torch.nn
 from sklearn.metrics.pairwise import euclidean_distances
-# import pyemd
 from utils import Notes
 
 best_pca = {}
@@ -26,10 +23,6 @@ def bn_modification(model, momentum=0.1, is_train=True):
     for name, layer in model.named_modules():
         if isinstance(layer, torch.nn.modules.BatchNorm2d):
             layer.momentum = momentum
-            # layer.running_mean = None
-            # layer.running_var = None
-            # layer.running_mean = layer.running_mean.clone().fill_(0)
-            # layer.running_var = layer.running_var.clone().fill_(1)
             layer.train(is_train)
     return model
 
@@ -156,14 +149,11 @@ def pca_fit(samples, n_comp=0.8, **kwargs):
         else:
             best_n = best_pca[hash_value]
         pca = PCA(n_components=best_n, random_state=1)
-        # pca = PCA(n_components=best_n, random_state=1, kernel='linear')
         pca_fitted = pca.fit(samples)
     else:
         if n_comp < 1.0:
             n_comp = int(min(samples.shape[0], samples.shape[1]) * n_comp)
         pca = PCA(n_components=n_comp, random_state=1)
-        # pca = PCA(n_components=n_comp, random_state=1, kernel='linear')
-        # pca = PCA(n_components=n_comp, random_state=1, alpha=0.1)
         pca_fitted = pca.fit(samples)
     return pca_fitted
 
@@ -202,39 +192,11 @@ def mmc(feature):
     return feature
 
 
-# def concat_feature(features, labels):
-#     if not isinstance(features, np.ndarray):
-#         features = features.numpy()
-#         labels = labels.numpy()
-#     fea_dim = features.shape[-1]
-#     feature_per_class = np.zeros((len(np.unique(labels)), fea_dim), dtype=np.float32)
-#     weight = np.zeros((len(np.unique(labels)),), dtype=np.float32)
-#     dic = {}
-#     for i, c in enumerate(np.unique(labels)):
-#         cmask = (labels == c)
 #         feature_per_class[i, :] = np.mean(features[cmask, :], axis=0)
-#         weight[i] = np.sum(cmask)
-#     dic['feature'] = feature_per_class
-#     dic['weight'] = weight
-#     return dic
 
 
-# def domain_similarity(x, y, anchor_x, anchor_y, gamma=0.01):
-#     target_dic = concat_feature(x, y)
-#     source_dic = concat_feature(anchor_x, anchor_y)
-#     f_s = source_dic['feature']
-#     w_s = source_dic['weight']
-#     f_t = target_dic['feature']
-#     w_t = target_dic['weight']
-#     data = np.float64(np.append(f_s, f_t, axis=0))
-#     w_1 = np.zeros((len(w_s) + len(w_t),), np.float64)
-#     w_2 = np.zeros((len(w_s) + len(w_t),), np.float64)
 #     w_1[:len(w_s)] = w_s / np.sum(w_s)
 #     w_2[len(w_s):] = w_t / np.sum(w_t)
-#     dist = euclidean_distances(data, data)
-#     emd = pyemd.emd(np.float64(w_1), np.float64(w_2), np.float64(dist))
-#     similarity = np.exp(-gamma * emd)
-#     return dist, emd, similarity
 
 
 def get_mean(data):
@@ -316,16 +278,6 @@ def class_centroids_sort(data, label):
 
 
 #
-# def class_centroids_best(data, label):
-#     data = reshape_dim2(data)
-#     centroids = []
-#     labels = []
-#     for c in np.unique(label):
-#         d = data[label == c]
-#         m = d.mean(axis=0)
-#         centroids.append(m)
-#         labels.append(c)
-#     return np.asarray(centroids), np.asarray(labels)
 
 
 def mean_distance(data, label):
@@ -393,7 +345,6 @@ def map_classes_best(anchor_medoids, anchor_topN, target_medoids, target_topN):
 
     class_map = {}
     best_anchors = anchor_medoids[anchor_topN]
-    # best_anchors = anchor_medoids
     num_classes = len(target_medoids)
     coords = distance.cdist(best_anchors, target_medoids, 'euclidean')
     row_ind, col_ind = linear_sum_assignment(coords)
@@ -428,7 +379,6 @@ def map_classes_closet(anchor_medoids, target_medoids):
     ys = []
     for tm in target_medoids:
         tms = np.asarray([tm for _ in range(len(anchor_medoids))])
-        # ams = anchor_medoids
         idx = np.argmin(paired_distances(tms, anchor_medoids))
         anchor.append(anchor_medoids[idx])
         ys.append(anchor_y[idx])
@@ -545,9 +495,6 @@ def silhouette_samples_ours(X, labels, *, metric="euclidean", **kwds):
     intra_clust_dists = np.concatenate(intra_clust_dists) * 1 / 2
     inter_clust_dists = np.concatenate(inter_clust_dists)
 
-    # denom = (label_freqs - 1).take(labels, mode="clip")
-    # with np.errstate(divide="ignore", invalid="ignore"):
-    #     intra_clust_dists /= denom
 
     sil_samples = inter_clust_dists - intra_clust_dists
     with np.errstate(divide="ignore", invalid="ignore"):
@@ -585,9 +532,6 @@ def map_anchor_target_pca(af, tf, al, tl, ncomp=0.8, **kwargs):
     tf = reshape_dim2(tf)
 
     # fitting pca and transform af and tf
-    # fitted_pca = pca_fit_o(af, n_comp=ncomp)
-    # af = fitted_pca.transform(af)
-    # tf = fitted_pca.transform_s(tf)
     if 'fitted_pca' in kwargs:
         fitted_pca = kwargs['fitted_pca']
     else:
@@ -609,31 +553,16 @@ def map_anchor_target_pca(af, tf, al, tl, ncomp=0.8, **kwargs):
     return class_map, aScore, tScore, fitted_pca
 
 
-# def map_anchor_target_pca_sensing(af, tf, al, tl, ncomp=0.8):
-#     af = reshape_dim2(af)
-#     tf = reshape_dim2(tf)
 #
 #     # fitting pca and transform af and tf
 #     # fitted_pca = pca_fit_o(af, n_comp=ncomp)
 #     # af = fitted_pca.transform(af)
 #     # tf = fitted_pca.transform_s(tf)
 #
-#     fitted_pca = pca_fit(tf, n_comp=ncomp)
-#     af = fitted_pca.transform(af)
-#     tf = fitted_pca.transform(tf)
 #
-#     aMedoids = class_medoids(af, al)
-#     tMedoids = class_medoids(tf, tl)
-#     topN = len(np.unique(tl))
 #
-#     aScore = class_silhouette_score(af, al)
-#     tScore = class_silhouette_score(tf, tl)
 #
-#     aTOPN = select_topN(aScore, topN)
-#     tTOPN = select_topN(tScore, topN)
 #
-#     class_map = map_classes(aMedoids, aTOPN, tMedoids, tTOPN)
-#     return class_map, aScore, tScore, fitted_pca
 
 
 def class_accuracy(y_true, y_pred):
@@ -672,14 +601,7 @@ def align_anchor_to_target(n_shot, dict):
 if __name__ == "__main__":
     from utils import load_dict, save_dict
 
-    # train_x = load_dict('../datasets/data/face/og_bn_noneval_c-1_train.pkl')[19]
     #
-    # train_y = torch.from_numpy(generate_labels(np.zeros((7, 5))))
-    # test_x = load_dict('../datasets/data/face/og_bn_noneval_c-1_test.pkl')[19]
-    # test_y = torch.from_numpy(generate_labels(np.zeros((7, 50))))
-    # train_x = reshape_dim2(train_x)
-    # distance = intra_distance(train_x, train_y)
-    # print()
     anchor_x = load_dict('../datasets/data/mini-imagenet/mean-split_bn_eval_c-1.pkl')
     anchor_y = generate_labels(np.zeros((100, 10)))
     train_x = load_dict('../datasets/data/face/og_bn_noneval_c-1_train.pkl')
@@ -694,11 +616,9 @@ if __name__ == "__main__":
         print("L{}:".format(ii))
         ax = anchor_x[layer_id]
         ax = ax.reshape(([-1] + list(ax.shape[2:])))
-        # ax_at = copy.deepcopy(ax)
         ax = mmc(ax)
 
         tx = train_x[layer_id]
-        # tx = normalization(tx)
         tx = mmc(tx)
 
         class_map, aScore, tScore, fitted_pca = map_anchor_target_pca(ax, tx, anchor_y, train_y)

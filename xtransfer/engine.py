@@ -114,7 +114,6 @@ class SimpleTrainer:
             pred = y_pred.argmax(dim=1, keepdim=True)
             correct = pred.eq(self.y.view_as(pred)).sum().item()
             acc = 100. * correct / len(self.y)
-            # print
             if (t + 1) % 10 == 0:
                 print(
                     'Epoch {:05} >>> Training loss: {:.5f}, Training accuracy: {:.2f}%'.format(t + 1, loss.item(), acc))
@@ -175,7 +174,6 @@ class OXiodTrainer:
             # update step
             self.optimizer.step()
 
-            # print
             if (t + 1) % 10 == 0:
                 print('Epoch {:05} >>> Training loss: {:.5f}'.format(t + 1, loss.item()))
 
@@ -295,7 +293,6 @@ class Net(Module):
         return {'val_loss': avg_loss}
 
     def configure_optimizers(self):
-        # return torch.optim.Adam(self.parameters(), lr=0.02)
         return torch.optim.Adam(self.head.parameters(), lr=0.01)
 
     def on_epoch_end(self, epoch):
@@ -347,7 +344,6 @@ class NetLoader(Module):
                 p.requires_grad = True
 
     def training_step(self, batch, batch_num):
-        # self.freeze_backbone()
         x, y = batch
         y_hat = self.forward(x)
         loss = F.cross_entropy(y_hat, y)
@@ -370,13 +366,7 @@ class NetLoader(Module):
         return {'val_loss': avg_loss}
 
     def configure_optimizers(self):
-        # return torch.optim.Adam(self.parameters(), lr=0.02)
-        # return torch.optim.Adam(self.model.parameters(), lr=0.01)
         return torch.optim.SGD(self.model.classifier.parameters(), lr=0.001, momentum=0.95)
-        # return torch.optim.SGD(self.model.parameters(), lr=0.01,
-        #                         momentum=0.9, dampening=0.9, weight_decay=0.001)
-        # return torch.optim.SGD(self.model.classifier.parameters(), lr=0.01,
-        #                         momentum=0.9, dampening=0.9, weight_decay=0.001)
 
     def on_epoch_end(self, epoch):
         print("Train accuracy: {:.4f}".format(self.top1.avg))

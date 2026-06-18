@@ -32,7 +32,6 @@ from xtransfer.hook import add_to_dict, get_mask_hook, get_activation_hook, _rem
 from modeling.backbone.resnet import BasicBlock
 from modeling.backbone.resnet1d import BasicBlock as BasicBlock1d
 from xtransfer.encoder import Trainer_RotationMatrix, Conv
-# from xtransfer.encoder import AutoEncoder as AutoEncoderOG
 from xtransfer.encoder import AutoEncoderOG
 from xtransfer.engine import EarlyStopping
 from utils import Notes, set_random_seed
@@ -99,10 +98,6 @@ def quick_check(x, y, anchor_x, anchor_y=None, next_input_size=None, head=None, 
             fitted_pca.mean_ = fitted_pca.mean_[prune_mask]
             fitted_pca.n_features_in_ = len(prune_mask)
     x_pca = fitted_pca.transform(x_mmc)
-    # if 'dic_key' in kwargs.keys():
-    #     key = kwargs['dic_key']
-    #     lid = kwargs['layer_id']
-    #     add_to_dict('{}_{}'.format(key, lid), x_pca)
     class_score = class_silhouette_score(x_pca, y, 4, regression=regression)
     mean_score = np.round(np.mean(list(class_score.values())), 4)
     del x_mmc
@@ -113,7 +108,6 @@ def quick_check(x, y, anchor_x, anchor_y=None, next_input_size=None, head=None, 
 
 @torch.no_grad()
 def prototype_test(x, y, test_x, test_y, head, model, resizer, n_support=5, n_query=15):
-    # n_way = len(np.unique(test_y))
     if resizer is not None:
         x = resizer(x)
         test_x = resizer(test_x)
@@ -131,7 +125,6 @@ def prototype_test(x, y, test_x, test_y, head, model, resizer, n_support=5, n_qu
 
     # test
     x_query = F.normalize(mmc(head(model(test_x)))).cpu()
-    # query = x_query.contiguous()
     dists = euclidean_dist(x_query, proto)
     scores = -dists
 
@@ -161,17 +154,11 @@ def euclidean_dist(x, y):
 def bn_init(x, next_input_size, head, model, **kwargs):
     bn_modification(head, momentum=1, is_train=True)
 
-    # dim_in = x.size(1)
-    # dim_out = next_input_size[0]
-    # input_size = x.size(2)
-    # output_size = next_input_size[1]
-    # model = AutoEncoderOG(dim_in, dim_out, input_size, output_size, head=head)
 
     x = model(x)
     head(x)
 
     bn_modification(head, momentum=0.1, is_train=True)
-    # return head
 
 
 class Downsample(nn.Module):
@@ -297,9 +284,6 @@ class MMCTrans:
 
         # loss function
         if 'npair' in self.loss_mode:
-            # loss_fun = NPairLoss()
-            # loss_fun = CrossSample(margin=np.max(self.margins), num_classes=self.num_classes,
-            #             intra=np.min(self.intra))
             loss_fun = MMD()
         else:
             loss_fun = TripletLoss()
@@ -319,7 +303,6 @@ class MMCTrans:
         for t in range(self.num_episode):
             y_pred = trainer(x)
             # loss
-            # loss = loss_fun(y_pred, self.y, anchors)
             loss = loss_fun(y_pred, self.y)
 
             # Zero gradients, perform a backward pass, and update the weights.
@@ -343,7 +326,6 @@ class MMCTrans:
                 best_state_dict = copy.deepcopy(trainer.model.state_dict())
                 best_epoch = t
 
-            # if t == 0 or t == self.num_episode - 1:
             if t%10 == 0:
                 print('Episode {:05} >>> Loss is: {:.5f}'.format(t + 1, loss.item()))
         # Retrieve model
@@ -384,8 +366,6 @@ class LastTrans:
         dim_in = self.x.size(1)
         input_size = self.x.size(2)
         dim_out = self.num_classes
-        # trainer = TrainerCNN(dim_in, dim_out, norm_mode=self.norm_mode)
-        # self.model = self.optimize_params(trainer)
         model = Conv(dim_in=dim_in, dim_out=dim_out, input_size=input_size)
         self.model = self.optimize_params(model)
 
@@ -395,16 +375,13 @@ class LastTrans:
         x = self.x.detach().to(device)
         y = self.y.to(device)
 
-        # loss_fun = NPairLoss()
         loss_fun = nn.CrossEntropyLoss()
         # optimizer and scheduler
-        # optimizer = torch.optim.SGD(trainer.model.parameters(), lr=0.01, momentum=0.95)
         optimizer = torch.optim.SGD(trainer.parameters(), lr=0.01, momentum=0.95)
         scheduler = StepLR(optimizer, step_size=int(self.num_episode * 0.2), gamma=0.5)
         es_min = int(self.num_episode * 0.25)
         es = EarlyStopping(patience=10, min_break_epoch=es_min)
         s_time = time.time()
-        # trainer.model.train()
         trainer.train()
 
         best_state_dict = None
@@ -432,16 +409,13 @@ class LastTrans:
 
             if loss.item() < best_loss:
                 best_loss = loss.item()
-                # best_state_dict = copy.deepcopy(trainer.model.state_dict())
                 best_state_dict = copy.deepcopy(trainer.state_dict())
                 best_epoch = t
             if t == 0 or t == self.num_episode - 1:
                 print('Episode {:05} >>> Loss is: {:.5f}'.format(t + 1, loss.item()))
         print('Recover model weights on epoch #{}'.format(best_epoch))
-        # trainer.model.load_state_dict(best_state_dict)
         trainer.load_state_dict(best_state_dict)
         print('Total training time is {:.3f}'.format(time.time() - s_time))
-        # return trainer.model
         return trainer
 
     def get_model(self):
@@ -480,11 +454,9 @@ class NormTrans:
 
         x = x.to(device)
         print('After repairing train S-score:')
-        # Notes.write('After repairing train S-score:')
         self.score, _ = quick_check(x, y, self.anchor_x, self.anchor_y, head=self.head, model=model,
                                     norm_mode=self.norm_mode)
         print('After repairing test S-score:')
-        # Notes.write('After repairing test S-score:')
         test_x = self.test_x.to(device)
         quick_check(test_x, self.test_y, self.anchor_x, self.anchor_y, head=self.head, model=model,
                     norm_mode=self.norm_mode)
@@ -500,7 +472,6 @@ class NormTrans:
         optimizer = torch.optim.SGD(trainer.model.parameters(), lr=0.01, momentum=0.95)
         scheduler = StepLR(optimizer, step_size=30, gamma=0.5)
         s_time = time.time()
-        # self.head.train()
         for t in range(self.num_episode):
 
             # Forward pass: Compute predicted y by passing x to the model
@@ -575,30 +546,18 @@ class RepairTrans:
         self.pca = fitted_pca
         pca_time = time.time()
 
-        # ax_pca = fitted_pca.transform(ax_mmc)
-        # aScore = class_silhouette_score(ax_pca, anchor_y)
-        # aTOPN = select_topN(aScore, top_n=self.num_classes)
-        # mask = np.isin(anchor_y, aTOPN)
-        # anchor_x = anchor_x[mask]
-        # anchor_y = anchor_y[mask]
-        # ax_mmc = mmc(anchor_x)
-        # if 'I' in self.norm_mode:
-        #     ax_mmc = F.normalize(ax_mmc)
-        # fitted_pca = pca_fit(ax_mmc, n_comp=self.n_comp)
         if fitted_pca.__class__.__name__ == 'PCA':
             anchor_pca = torch.from_numpy(fitted_pca.components_.T).float()
             anchor_mean = torch.from_numpy(fitted_pca.mean_).float()
         elif fitted_pca.__class__.__name__ == 'SparsePCA':
             anchor_pca = torch.from_numpy(fitted_pca.components_.T).float()
             anchor_mean = torch.from_numpy(fitted_pca.mean_).float()
-            # self.rotate = False
         else:
             from sklearn.decomposition import PCA
             pca = PCA(n_components=2, random_state=1)
             pca_fitted = pca.fit(ax_mmc)
             anchor_pca = torch.from_numpy(pca_fitted.components_.T).float()
             anchor_mean = torch.from_numpy(pca_fitted.mean_).float()
-            # self.rotate = False
 
         # build trainer
         dim_in = self.x.size(1)
@@ -621,7 +580,6 @@ class RepairTrans:
         # pcas
         ax_pca = fitted_pca.transform(ax_mmc)
         tx_pca = fitted_pca.transform(pre_x_mmc)
-        # add_to_dict('L{}_og'.format(self.layer_id), tx_pca)
 
         # ax properties
         aScore = class_silhouette_score(ax_pca, anchor_y, regression=self.regression)
@@ -653,9 +611,6 @@ class RepairTrans:
             scale = np.mean(ax_interD[aTOPN], keepdims=True) / np.mean(tx_interD, keepdims=True)
         print('Scale is {:.4f}'.format(scale[0]))
 
-        # maxI = np.argwhere(ax_interD == np.max(ax_interD))[0][0]
-        # maxS = np.argwhere(tx_interD == np.max(tx_interD))[0][0]
-        # print('Scale is {:.4f}, anchor class is {}, sensing class is {}'.format(scale[0], maxI, maxS))
         trainer.set_scale(torch.from_numpy(scale))
         tx_pca *= scale
 
@@ -688,7 +643,6 @@ class RepairTrans:
             # set rm to forward function
             class_map = class_map_rm
             trainer.set_rm(rm)
-            # add_to_dict('RM{}'.format(self.layer_id), rm.numpy())
 
         anchors = []
         anchor_ys = []
@@ -714,20 +668,9 @@ class RepairTrans:
             self.intra = np.stack(ax_intraD)
             self.inter = np.stack(ax_interD)
 
-        # for i in range(self.num_classes):
-        #     anchors.append(aMedoids[alabels == class_map[i]])
-        #     margins.append(ax_margins[alabels == class_map[i]])
-        #     anchor_ys.append(class_map[i])
         #
-        # anchors = np.concatenate(anchors, axis=0)
-        # self.margins = np.concatenate(margins, axis=0)
-        # self.anchors = torch.from_numpy(anchors)
 
         np_class_map = np.asarray([[a, b] for a, b in class_map.items()])
-        # add_to_dict('C{}'.format(self.layer_id), np_class_map)
-        # add_to_dict('A{}'.format(self.layer_id), self.anchors.numpy())
-        # add_to_dict('Ay{}'.format(self.layer_id), anchor_ys)
-        # add_to_dict('S{}'.format(self.layer_id), scale)
 
         matching_time = time.time()
 
@@ -764,30 +707,23 @@ class RepairTrans:
     def optimize_params(self, trainer):
         # to device
         trainer = trainer.to(device)
-        # print(trainer.model)
         anchors = self.anchors.to(device)
         x = self.x.to(device)
         #### First Stage ####
         # loss function
         print('Max (inter-intra)_margin is {:.4f}, Min intra-margin is {:.4f}'.format(np.max(self.margins),
                                                                                       np.min(self.intra)))
-        # print("Numpy sampling seed: {}".format(np.random.get_state()[1][0]))
         if self.regression:
-            # loss_fun = CrossSample(margin=np.max(self.margins), num_classes=self.num_classes,
-            #                        intra=np.min(self.intra), sampling_method='anchor_npair_regression')
             loss_fun = PositiveNegativeLoss(margin=np.max(self.margins), num_classes=self.num_classes,
                                             intra=np.min(self.intra))
         else:
             loss_fun = CrossSample(margin=np.max(self.margins), num_classes=self.num_classes,
                                    intra=np.min(self.intra))
 
-            # loss_fun = MMD()
 
 
 
 
-        # loss_fun = AnchorLoss()
-        # loss_fun1 = NPairLoss()
         # optimizer and scheduler
 
         # bert model
@@ -797,9 +733,7 @@ class RepairTrans:
         norm_params = [p for n, p in trainer.head.named_parameters() if any(nd in n for nd in no_decay)]
         bert_params = bias_params + norm_params
 
-        # optimizer = torch.optim.SGD(trainer.model.parameters(), lr=0.01, momentum=0.95)
         optimizer = torch.optim.SGD(list(trainer.model.parameters()) + list(bert_params), lr=0.01, momentum=0.95)
-        # scheduler = StepLR(optimizer, step_size=30, gamma=0.5)
         scheduler = StepLR(optimizer, step_size=int(self.num_episode * 0.2), gamma=0.5)
 
         # early stop min
@@ -812,7 +746,6 @@ class RepairTrans:
         best_loss = np.inf
         best_epoch = 0
         self.epoch_loss = []
-        # self.head.train()
         for t in range(self.num_episode):
 
             # Forward pass: Compute predicted y by passing x to the model
@@ -820,8 +753,6 @@ class RepairTrans:
 
             # loss
             loss = loss_fun(y_pred, self.y, anchors)
-            # loss1 = loss_fun1(y_pred, self.y)
-            # loss = loss + loss1
 
             # Zero gradients, perform a backward pass, and update the weights.
             optimizer.zero_grad()
@@ -838,8 +769,6 @@ class RepairTrans:
                 print('Early Stop>>>')
                 print('Episode {:05} >>> Best loss is: {:.5f}'.format(t, best_loss))
                 break
-            # print
-            # if (t + 1) % 100 == 0 :
             if loss.item() < best_loss:
                 best_loss = loss.item()
                 best_state_dict = copy.deepcopy(trainer.model.state_dict())
@@ -851,8 +780,6 @@ class RepairTrans:
         print('Recover model weights on epoch #{}'.format(best_epoch))
         trainer.model.load_state_dict(best_state_dict)
         print('Total training time is {:.3f}'.format(time.time() - s_time))
-        # y_pred = trainer(x)
-        # add_to_dict('L{}_new'.format(self.layer_id), y_pred.detach().cpu().numpy())
         return trainer.model
 
     def get_prehead(self):
@@ -890,7 +817,6 @@ class PruneTrans:
         self.norm_mode = kwargs['norm_mode']
         self.max_range = max_range
         self.regression = regression
-        # self.mode = 'L2'
         self.mode = 'PCA'
         self.get_fitted_pca()
 
@@ -974,7 +900,6 @@ class PruneTrans:
                 sMap = class_silhouette_score(x_pca, self.y, regression=self.regression)
                 score = np.mean([s for _, s in sMap.items()])
                 score_dic[n] = np.round(score, 2)
-            # print(score_dic)
             if int(self.max_range * len(weights)) - 1 <= 0:
                 topn = 0
             else:
@@ -1127,7 +1052,6 @@ class PruneTrans:
                 block = None
 
             elif isinstance(layer, bn_objs):
-                # pass
                 if pre_mask is not None:
                     tp.prune_batchnorm(layer, pre_mask)
 
@@ -1138,7 +1062,6 @@ class PruneTrans:
         macs, params = PruneTrans.calculate_flops(self.pruned_head, input)
         self.macs = macs
         self.params = params
-        # Notes.write('MACs is {}, Params is {}'.format(macs, params))
 
     @staticmethod
     def calculate_flops(model, input):
@@ -1258,10 +1181,6 @@ class Finetuner:
 
 
 if __name__ == "__main__":
-    # net = Downsample(torch.from_numpy(np.asarray([0, 1, 2, 3, 4])))
-    # input = torch.randn(3, 7, 4, 4)
-    # out = net(input)
-    # print(out.shape)
 
     from torchvision.models import resnet18
 

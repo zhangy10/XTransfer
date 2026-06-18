@@ -577,8 +577,6 @@ class NPairLoss_CrossModal(torch.nn.Module):
         :param negatives: A torch.Tensor, (n, n-1, embedding_size)
         :return: A scalar
         """
-        # anchors = torch.unsqueeze(anchors, dim=1)  # (n, 1, embedding_size)
-        # positives = torch.unsqueeze(positives, dim=1)  # (n, 1, embedding_size)
         eps = 1e-6
 
         x = torch.matmul(anchors, (negatives - positives).transpose(0, 1))  # (n, 1, n-1)
@@ -626,7 +624,6 @@ class NPairLoss_CrossModal(torch.nn.Module):
         loss = loss + self.l2 * torch.mean(
             torch.stack([self.l2_loss(batch[npair[0], :], t_batch[npair[1], :]) for npair in sampled_npairs]))
 
-        # loss = loss
         return torch.mean(loss)
 
 
@@ -646,7 +643,6 @@ class NPairLoss_CrossModal_Weighted(torch.nn.Module):
         self.pdist = torch.nn.PairwiseDistance(keepdim=True)
         self.softmax = torch.nn.Softmax(dim=0)
 
-    # def npair_distance(self, anchor, positive, negatives):
     #     """
     #     Compute basic N-Pair loss.
     #
@@ -655,10 +651,8 @@ class NPairLoss_CrossModal_Weighted(torch.nn.Module):
     #     Returns:
     #         n-pair loss (torch.Tensor())
     #     """
-    #     return torch.log(1 + torch.sum(torch.exp(anchor.mm((negatives - positive).transpose(0, 1)))))
 
     # @staticmethod
-    # def n_pair_loss(anchors, positives, negatives):
     #     """
     #     Calculates N-Pair loss
     #     :param anchors: A torch.Tensor, (n, embedding_size)
@@ -670,10 +664,6 @@ class NPairLoss_CrossModal_Weighted(torch.nn.Module):
     #     # positives = torch.unsqueeze(positives, dim=1)  # (n, 1, embedding_size)
     #     # eps = 1e-6
     #
-    #     x = torch.matmul(anchors, (negatives - positives).transpose(0, 1))  # (n, 1, n-1)
-    #     x = torch.sum(torch.exp(x))  # (n, 1)
-    #     loss = torch.log(1 + x)
-    #     return loss
 
     def n_pair_loss_weighted(self, anchors, positives, negatives):
         """
@@ -683,15 +673,9 @@ class NPairLoss_CrossModal_Weighted(torch.nn.Module):
         :param negatives: A torch.Tensor, (n, n-1, embedding_size)
         :return: A scalar
         """
-        # anchors = torch.unsqueeze(anchors, dim=1)  # (n, 1, embedding_size)
-        # positives = torch.unsqueeze(positives, dim=1)  # (n, 1, embedding_size)
-        # eps = 1e-6
         if not len(anchors):
             return torch.tensor(0)
         many_anchor = torch.cat([anchors for i in range(negatives.size(0))], dim=0)
-        # many_anchor = torch.cat([positives for i in range(negatives.size(0))], dim=0)
-        # dist = self.softmax(1 / self.pdist(many_anchor, negatives))
-        # dist = self.softmax(1 / self.pdist(many_anchor, negatives)) * negatives.size(0)
         dist = F.softmax(1 / F.pairwise_distance(many_anchor, negatives, keepdim=True), dim=0) * negatives.size(0)
 
         x = torch.matmul(anchors, (dist * (negatives - positives)).transpose(0, 1))  # (n, 1, n-1)
@@ -745,7 +729,6 @@ class NPairLoss_CrossModal_Weighted(torch.nn.Module):
         loss = loss + self.l2 * torch.mean(
             torch.stack([self.l2_loss(batch[npair[0], :], t_batch[npair[1], :]) for npair in sampled_npairs]))
 
-        # loss = loss
         return torch.mean(loss)
 
 
@@ -771,11 +754,9 @@ class N_plus_1_Loss(torch.nn.Module):
         negatives = [negatives[i * 5:(i + 1) * 5] for i in range(batch_size)]
         negatives = torch.stack(negatives)  # (batch_size, n-1, embedding_size)
 
-        # print(anchors)
         anchors, positives, negatives = anchors.cuda(), positives.cuda(), negatives.cuda()
         losses = self.n_pair_loss(anchors, positives, negatives) \
                  + self.l2_reg * self.l2_loss(anchors, positives)
-        # print(self.n_pair_loss(anchors, positives, negatives), self.l2_reg * self.l2_loss(anchors, positives))
         return losses
 
     @staticmethod

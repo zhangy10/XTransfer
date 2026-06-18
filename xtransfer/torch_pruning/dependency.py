@@ -489,7 +489,6 @@ class DependencyGraph(object):
             processing_stack = [(node, fn, indices)]
             while len(processing_stack) > 0:
                 node, fn, indices = processing_stack.pop(-1)
-                # print(node in visited)
                 visited.add(node)
 
                 for dep in node.dependencies:

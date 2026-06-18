@@ -66,12 +66,6 @@ class StructrualDropoutPruner(LocalPruner):
 
     def regularize(self, model):
         pass 
-        #for plan in self.plans:
-        #    module = plan[0][0].target.module
-        #    imp = self.estimate_importance(plan)
-        #    imp2prob = imp_to_prob(imp)
-        #    dropout_layer = self.module2dropout[module][0]
-        #    dropout_layer.reset(p=imp2prob)
     
     def register_structural_dropout(self, module):
         for plan in self.plans:

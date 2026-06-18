@@ -244,9 +244,6 @@ class LAMPImportance(Importance):
                 this_importance = torch.norm(torch.flatten(w, 1), dim=1, p=self.p)
                 this_importance = rescale(this_importance)
                 importance+=this_importance
-                #if layer.bias is not None:
-                #    w = (layer.bias)[idxs].view(-1, 1)
-                #    importance += torch.norm(w, dim=1, p=self.p)
                 non_importance = False
             elif prune_fn in [
                 functional.prune_conv_in_channel,
@@ -271,13 +268,8 @@ class LAMPImportance(Importance):
             elif prune_fn == functional.prune_batchnorm:
                 continue
                 if layer.affine is not None:
-                    #scale = layer.weight / sqrt_rv
-                    #bias = layer.bias - rm / sqrt_rv * layer.weight
                     w = (layer.weight)[idxs].view(-1, 1)
                     importance += rescale(torch.norm(w, dim=1, p=self.p))
-                    #w = (bias)[idxs].view(-1, 1)
-                    #importance *= torch.norm(w, dim=1, p=self.p)
-            #        non_importance = False
             else:
                 n_layers -= 1
             if self.local:

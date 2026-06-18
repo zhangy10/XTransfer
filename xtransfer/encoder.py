@@ -29,14 +29,12 @@ class Conv(nn.Module):
                               stride=self.stride, padding=self.pad)
         self.bn = nn.BatchNorm2d(num_features=self.dim_in * 2)
         self.relu = nn.ReLU(inplace=True)
-        # self.global_avgpool = nn.AdaptiveAvgPool2d(1)
         self.linear = nn.Linear(self.dim_in * 2 * self.input_size * self.input_size, self.dim_out)
 
     def forward(self, x):
         x = self.conv(x)
         x = self.bn(x)
         x = self.relu(x)
-        # x = self.global_avgpool(x)
         x = x.view(x.size(0), -1)
         x = self.linear(x)
         return x
@@ -192,22 +190,12 @@ class PreResizer(nn.Module):
             self.output_size = self.input_size
             self.out_channels = self.dim_in
         else:
-            # self.dilation = 1
-            # self.stride = 1
-            # self.kernel = 5
             self.calculate_stride()
             self.calculate_dilation()
             self.build_layers()
             self.output_size = int(self.calculate_out_size())
 
-        # p_topbottom = self.backbone_input - self.out_channels
-        # p_top = p_topbottom//2
-        # p_bottom = p_topbottom - p_top
         #
-        # p_leftright = self.backbone_input - self.output_size
-        # p_left = p_leftright//2
-        # p_right = p_leftright - p_left
-        # self.pad = nn.ZeroPad2d((p_left, p_right, p_top, p_bottom))
 
     def calculate_stride(self):
         self.stride = int(self.input_size / self.backbone_input)
@@ -224,9 +212,6 @@ class PreResizer(nn.Module):
         self.dilation = int(d) + 1
 
     def build_layers(self):
-        # out_channels_addition = self.input_size - self.backbone_input
-        # out_channels_addition = 0
-        # self.out_channels = min(self.backbone_input, self.dim_in**2)
         self.out_channels = self.backbone_input
         self.conv = nn.Conv1d(in_channels=self.dim_in, out_channels=self.out_channels, kernel_size=self.kernel,
                               stride=self.stride, dilation=self.dilation)
@@ -238,7 +223,6 @@ class PreResizer(nn.Module):
             x = self.bn(x)
         x = x.unsqueeze(1)
         x = self.resizer(x)
-        # x = self.pad(x)
         return x
 
 
@@ -262,7 +246,6 @@ class Trainer_Npair(nn.Module):
             self.model = kwargs['model']
         else:
             self.model = AutoEncoderOG(dim_in, dim_out, input_size, output_size)
-        # self.model = AutoEncoderD(dim_in, dim_out, input_size, output_size)
         self.norm_mode = kwargs['norm_mode']
         self.head = head
         self.scale = None
@@ -291,7 +274,6 @@ class Trainer_Npair(nn.Module):
         def init(m):
             if isinstance(m, (nn.Conv2d, nn.ConvTranspose2d)):
                 torch.nn.init.normal_(m.weight, mean, std)
-                # torch.nn.init.uniform_(m.weight, a=-1, b=std)
 
         self.model.apply(init)
 
@@ -305,7 +287,6 @@ class Trainer_RotationMatrix(nn.Module):
         self.input = self.input / torch.linalg.norm(self.input)
         self.anchor = torch.from_numpy(anchor).float()
         self.anchor = self.anchor / torch.linalg.norm(self.anchor)
-        # rotation_matrix = torch.from_numpy(np.identity(num_channels)).float()
 
         rotation_matrix = torch.ones((num_channels, num_channels))
         torch.nn.init.uniform_(rotation_matrix, -1.0, 1.0).float()
@@ -315,20 +296,14 @@ class Trainer_RotationMatrix(nn.Module):
         self.loss_fun = torch.nn.CosineEmbeddingLoss()
 
     def train(self, epoch):
-        # self.scheduler = StepLR(self.optimizer, step_size=20, gamma=0.5)
         for e in range(epoch):
             out = torch.mm(self.input, self.rotation_matrix)
             loss = self.loss_fun(out, self.anchor, torch.Tensor(out.size(0)).fill_(1.0))
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
-            # self.scheduler.step()
             if e == 0 or e == epoch - 1:
                 print('Episode {:05} >>> Loss is: {:.5f}'.format(e + 1, loss.item()))
-            # if (e + 1) % 5 == 0:
-            #     rm = self.rotation_matrix
-            #     rm = rm.detach()
-            #     add_to_dict('RM{}_{}'.format(e + 1, self.layer_id), rm.numpy())
 
     def get_rm(self):
         self.rotation_matrix.requires_grad = False
@@ -353,8 +328,6 @@ class Trainer(nn.Module):
             backbone_input = kwargs['backbone_input']
             self.model = AutoEncoderOG(dim_in, dim_out, input_size, output_size, head=head, first_layer=first_layer,
                                        backbone_input=backbone_input)
-            # self.model = AutoEncoder(dim_in, dim_out, input_size, output_size)
-        # self.model = AutoEncoderD(dim_in, dim_out, input_size, output_size)
         self.norm_mode = kwargs['norm_mode']
         self.head = head
         self.scale = None
@@ -385,7 +358,6 @@ class Trainer(nn.Module):
         def init(m):
             if isinstance(m, (nn.Conv2d, nn.ConvTranspose2d)):
                 torch.nn.init.normal_(m.weight, mean, std)
-                # torch.nn.init.uniform_(m.weight, a=-1, b=std)
 
         self.model.apply(init)
 
@@ -453,7 +425,6 @@ class TrainerMMC(nn.Module):
 
     def forward(self, x):
         x = self.model(x)
-        # x = F.normalize(x)
         x = self.head(x)
         out = self.mmc(x)
 
@@ -649,19 +620,6 @@ if __name__ == "__main__":
     output = model(input)
     print(output.size())
 
-    # for s in [224, 56, 28, 14, 7]:
-    # model.calculate_kenel_size(s)
 
-    # pca = torch.randn(16, 2)
-    # mean = torch.randn(16)
-    # model = AutoEncoderChannel(pca, mean, dim_out, input_size, output_size)
-    # model = AutoEncoderD(dim_in, dim_out, input_size, output_size)
-    # input = torch.randn(2, 3, 224, 224)
-    # output = model(input)
-    # print(output.size())
 
-    # input = torch.randn(10,5,6,84,84)
-    # model = Header(num_channels=6)
-    # output = model(input)
-    # print(output.size())
 

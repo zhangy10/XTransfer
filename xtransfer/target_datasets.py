@@ -78,7 +78,6 @@ class LoaderWrapper:
                 data = x
                 if self.afterheader:
                     data = self.header(data)
-                    # data = data.detach()
                 target = y
                 break
         size_list = self.get_data_size(data)
@@ -118,7 +117,6 @@ class LoaderWrapper:
                 data = x
                 if self.afterheader:
                     data = self.header(data)
-                    # data = data.detach()
                 target = y
                 break
         size_list = self.get_data_size(data)
@@ -149,9 +147,6 @@ class LoaderWrapper:
         test = tdata[mask].contiguous().view(n_way * n_query, *size_list)
         test_x, test_y = test[:, :, :data_length], test[:, 0, label_idx]
 
-        # train_x = resizer(train_x).unsqueeze(1)
-        # val_x = resizer(val_x).unsqueeze(1)
-        # test_x = resizer(test_x).unsqueeze(1)
 
         train_dataset = CustomDataset(train_x, train_y)
         val_dataset = CustomDataset(val_x, val_y)

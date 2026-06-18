@@ -4,7 +4,6 @@ from numpy.linalg import norm
 from torch import nn
 from functools import partial
 from torch.autograd import Variable
-# from utils import set_random_seed
 
 
 class TupleSampler():
@@ -88,8 +87,6 @@ class TupleSampler():
         neg_tuples = []
 
         for idx in range(len(pos_pairs)):
-            # p_pairs = np.array([np.random.choice(np.where(labels == x)[0], 2, replace=False) for x in label_set])
-            # neg_tuples.append(p_pairs[np.delete(np.arange(len(p_pairs)), idx), 1])
 
             neg_tuples.append(pos_pairs[np.delete(np.arange(len(pos_pairs)), idx), 1])
 
@@ -118,8 +115,6 @@ class TupleSampler():
         neg_tuples = []
 
         for idx in range(len(pos_pairs)):
-            # p_pairs = np.array([np.random.choice(np.where(labels == x)[0], 2, replace=False) for x in label_set])
-            # neg_tuples.append(p_pairs[np.delete(np.arange(len(p_pairs)), idx), 1])
 
             neg_tuples.append(pos_pairs[np.random.choice(np.delete(np.arange(len(pos_pairs)), idx), 1), 0])
 
@@ -177,7 +172,6 @@ class anchorNpairR(torch.nn.Module):
             n-pair loss (torch.Tensor())
         """
         return torch.nn.functional.relu(torch.sqrt((anchor - positive).pow(2)).sum() - self.margin)
-        # return torch.nn.functional.relu(torch.sqrt((anchor - positive).pow(2)).sum())
 
     def weightsum(self, anchor, positive):
         """
@@ -276,7 +270,6 @@ class CrossSample(torch.nn.Module):
         Returns:
             triplet loss (torch.Tensor())
         """
-        # return torch.sqrt((anchor - corss_anchor).pow(2)).sum() - self.intra_margin
         return torch.nn.functional.relu(torch.sqrt((anchor - positive).pow(2)).sum() - self.intra_margin)
 
     def negative_distance(self, anchor, negatives):
@@ -304,53 +297,23 @@ class CrossSample(torch.nn.Module):
         return loss
 
 # MMD
-# def pairwise_distance(x, y):
-#     if not len(x.shape) == len(y.shape) == 2:
-#         raise ValueError('Both inputs should be matrices.')
-#
-#     if x.shape[1] != y.shape[1]:
-#         raise ValueError('The number of features should be the same.')
-#
-#     x = x.view(x.shape[0], x.shape[1], 1)
-#     y = torch.transpose(y, 0, 1)
-#     output = torch.sum((x - y) ** 2, 1)
-#     output = torch.transpose(output, 0, 1)
-#
-#     return output
 #
 #
-# def gaussian_kernel_matrix(x, y, sigmas):
-#     sigmas = sigmas.view(sigmas.shape[0], 1)
-#     beta = 1. / (2. * sigmas)
-#     dist = pairwise_distance(x, y).contiguous()
-#     dist_ = dist.view(1, -1)
-#     beta = beta.double()
-#     dist_ = dist_.double()
-#     s = torch.matmul(beta, dist_)
-#
-#     return torch.sum(torch.exp(-s), 0).view_as(dist)
 #
 #
-# def maximum_mean_discrepancy(x, y, kernel=gaussian_kernel_matrix):
-#     cost = torch.mean(kernel(x, x))
-#     cost += torch.mean(kernel(y, y))
-#     cost -= 2 * torch.mean(kernel(x, y))
-#
-#     return cost
 #
 #
-# def mmd_loss_fun(source_features, target_features):
 #
-#     sigmas = [
+#
+#
+#
+#
+#
 #         1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 5, 10, 15, 20, 25, 30, 35, 100,
 #         1e3, 1e4, 1e5, 1e6
 #     ]
 #
-#     gaussian_kernel = partial(gaussian_kernel_matrix, sigmas = Variable(torch.cuda.FloatTensor(sigmas)))
-#     loss_value = maximum_mean_discrepancy(source_features, target_features, kernel= gaussian_kernel)
-#     loss_value = loss_value
 #
-#     return loss_value
 
 class RBF(nn.Module):
 
@@ -399,7 +362,6 @@ class MMD(torch.nn.Module):
         if self.classifier is None:
             num_classes = torch.unique(labels).shape[0]
             self.classifier = nn.Linear(batch.shape[1], num_classes).to(batch.device)
-            # self.classifier = nn.Linear(batch.shape[1], num_classes).to(batch.device).double()
 
         samples = self.sampler.give(batch, labels, img_anchors=img_anchor)
         anchor_pairs, npairs = samples
@@ -411,7 +373,6 @@ class MMD(torch.nn.Module):
         labels = labels.to(device=batch.device)
         class_loss = self.ce(fea, labels)
         loss = mmd_loss + class_loss
-        # loss = class_loss
         return loss
 
 # batch calculate batch anchor by label
@@ -471,7 +432,6 @@ class PositiveNegativeLoss(torch.nn.Module):
         Returns:
             triplet loss (torch.Tensor())
         """
-        # return torch.sqrt((anchor - corss_anchor).pow(2)).sum() - self.intra_margin
         return torch.sqrt((anchor - corss_anchor).pow(2)).sum()
 
     def negative_distance(self, anchor, negatives):
@@ -504,20 +464,10 @@ class PositiveNegativeLoss(torch.nn.Module):
         if self.episode == 0 or (self.episode + 1) % 10 == 0:
             print('Sample Positive Loss: {:.5f}'.format(sample_loss.item()))
 
-        # if len(negtive_pairs) > 0:
-        # negative_loss = torch.mean(torch.stack(
         #     [self.negative_distance(batch[pair[0], :], batch[pair[1:], :]) for pair in negtive_pairs]))
-        # else:
-        #     negative_loss = torch.tensor(0.0)
         #
-        # loss = sample_loss + negative_loss
-        # if self.episode == 0 or (self.episode + 1) % 10 == 0:
-        #     print(
         #         'Sample Positive Loss: {:.5f}, Negative Loss: {:.5f}'.format(sample_loss.item(), negative_loss.item()))
 
-        # loss = negative_loss
-        # if self.episode == 0 or (self.episode + 1) % 10 == 0:
-        #     print(
         #         'Negative Loss: {:.5f}'.format(negative_loss.item()))
 
         self.episode += 1

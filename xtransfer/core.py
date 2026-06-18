@@ -1,6 +1,3 @@
-# import torch
-# import numpy as np
-# import math
 import time
 import torch.nn as nn
 import torch.nn.functional as F
@@ -29,7 +26,6 @@ from xtransfer.tools import class_accuracy, build_model_dict, get_next_key, clas
     inter_distance, mmc, convert_numpy
 from xtransfer.hook import add_to_dict
 from xtransfer.engine import SimpleTrainer, OXiodTrainer, OXiodLinear
-# from dataloader.oxiod_dataset import load_oxiod_dataset, load_dataset_6d_quat, generate_trajectory_6d_quat
 from dataloader.transforms import *
 from modeling.backbone.conv1d import Conv4
 
@@ -57,10 +53,6 @@ class SeqBase(nn.Module):
 
     def forward(self, x):
         out = self.trunk(x)
-        # for layer in self.parametrized_layers:
-        #     x = layer(x)
-        #     if isinstance(x, tuple):
-        #         x = x[0]
         return out
 
     def add_layer(self, layer):
@@ -151,7 +143,6 @@ class MatchingNet:
         # load models
         for key in self.pool.keys():
             self.pool[key]['model'] = self.create_load_model(key)
-            # self.pool[key]['anchor'] = self.load_anchor(os.path.join(model_dir, key, anchor_name))
 
             anchor = self.load_anchor(os.path.join(model_dir, key, anchor_name))
             anchor = self.align_anchor_to_target(anchor)
@@ -240,8 +231,6 @@ class MatchingNet:
                     nl = copy.deepcopy(l)
                     layers.append(nl)
                     i += 1
-                    # print(l)
-            # print()
 
     def split_model_to_layers_name(self):
         self.backbone_depth = 0
@@ -293,12 +282,10 @@ class MatchingNet:
                 # add to layer pool
                 ht.clear_dict()
                 self.pool[key]['layers'][lid] = unit
-                # print()
 
     def search_inter_key(self, dic, block_key):
         for key in dic.keys():
             if block_key == key[:len(block_key)] and key != (block_key + '_out'):
-                # print(key)
                 return key
         return None
 
@@ -347,24 +334,14 @@ class MatchingNet:
             pool_time_dict = {}
             search_depth = 1 if int(lid) == 0 else self.search_depth
 
-            # break
             if int(lid) > self.break_layer_id:
                 print('COMPLETE!')
                 break
-            # if self.backbone_layer > 2:
-            #     print('COMPLETE!')
-            #     break
 
             if self.cfg.RSR.REGRESSION and self.backbone_layer > 2:
                 print('COMPLETE!')
                 break
 
-            # if int(lid) in [1, 2, 3, 4, 5, 6]:
-            #     print('SKIP!')
-            #     continue
-            # if int(lid) == 7:
-            # self.cfg.RSR.LOSS_MODE = 'mmc-triplet'
-            # self.cfg.RSR.LOSS_MODE = 'mmc-npair'
 
             # skip already selected lid
             if int(lid) <= int(last_lid):
@@ -391,8 +368,6 @@ class MatchingNet:
                                                             val_y=val_y)
                 
                 # Get the layer with highest estimate_score
-                # top_layer = max(layers_score.keys(), key=lambda k: layers_score[k]['estimated_score'])
-                # layer_pool = {top_layer: layer_pool[top_layer]}
 
                 quickcheck_time = time.time() - stime
                 pool_time_dict['quick_check'] = quickcheck_time
@@ -403,7 +378,6 @@ class MatchingNet:
                         self.seed_pool[self.backbone_layer] = np.random.get_state()
                     np.random.set_state(self.seed_pool[self.backbone_layer])
                 else:
-                    # set_random_seed(5)
                     if self.init_seed is None:
                         self.init_seed = np.random.get_state()
                     np.random.set_state(self.init_seed)
@@ -419,7 +393,6 @@ class MatchingNet:
             best_nid = self.select_best_layer(layer_candidates)
 
             # for experiment only
-            # best_nid = list(layer_pool.keys())[0]
 
             self.logger.write('layer_time', (best_nid, pool_time_dict))
             self.print_dict(layer_candidates)
@@ -450,9 +423,6 @@ class MatchingNet:
             last_lid = int(best_nid.split('_')[-1])
             print('Selected best layer {}'.format(best_nid))
             Notes.write('Selected best layer {}'.format(best_nid))
-            # self.last_train_score = layer_candidates[best_nid]['prune_train_score']
-            # self.last_test_score = layer_candidates[best_nid]['prune_test_score']
-            # self.last_val_score = layer_candidates[best_nid]['prune_val_score']
 
             self.last_train_score = layer_candidates[best_nid]['train_score']
             self.last_test_score = layer_candidates[best_nid]['test_score']
@@ -490,8 +460,6 @@ class MatchingNet:
 
             input = self.backbone(og_input)
             test = self.backbone(og_test)
-            # add_to_dict('L{}og'.format(lid), input.detach().cpu().numpy())
-            # add_to_dict('L{}og_test'.format(lid), test.detach().cpu().numpy())
 
             self.backbone.remove_last_layer()
             self.backbone.remove_last_layer()
@@ -503,8 +471,6 @@ class MatchingNet:
             self.backbone.add_layer(layer_candidates[best_nid]['head'])
             input = self.backbone(og_input)
             test = self.backbone(og_test)
-            # add_to_dict('L{}'.format(lid), input.detach().cpu().numpy())
-            # add_to_dict('L{}_test'.format(lid), test.detach().cpu().numpy())
 
             if self.test_acc:
                 print('After repairing S2>>>')
@@ -525,7 +491,6 @@ class MatchingNet:
                 self.backbone.remove_last_layer()
                 self.backbone.add_layer(layer_candidates[best_nid]['pruned_head'])
                 input_after = self.backbone(og_input)
-                # add_to_dict('L{}_afterhead'.format(lid), input_after.detach().cpu().numpy())
                 if self.test_acc:
                     print('After pruning >>>')
                     train_acc, test_acc = scorer(method=self.test_method)
@@ -642,7 +607,6 @@ class MatchingNet:
             else:
                 layer_candidates[key]['s_score'] = a * (item['train_score'] + 1) + b * (
                         item['val_score'] + 1)
-                # layer_candidates[key]['s_score'] = a * (item['prune_train_score'] + 1) + b * (
                 #         item['prune_val_score'] + 1)
             layer_candidates[key]['resource_score'] = max(1, (item['encoder_macs'] + item['macs']) / floats_scale)
             layer_candidates[key]['score'] = item['s_score'] / layer_candidates[key]['resource_score']
@@ -676,16 +640,6 @@ class MatchingNet:
 
         for key, item in layer_candidates.items():
             con = True
-            # if not item['rollback']:
-            #     if not item['prune_train_score'] >= self.last_train_score:
-            #         con = False
-            #     if not item['prune_train_score'] >= (item['before_train_score']):
-            #         con = False
-            #     if self.cfg.RSR.BEST_VALIDATION:
-            #         if not item['prune_val_score'] >= (self.last_val_score - thres_unit):
-            #             con = False
-            #         if not item['prune_val_score'] >= (item['before_val_score'] - thres_unit):
-            #             con = False
             if not item['rollback']:
                 if not item['train_score'] >= self.last_train_score:
                     con = False
@@ -700,12 +654,8 @@ class MatchingNet:
             if self.backbone_layer == 1:
                 con = True
 
-            # SSR_only
-            if True:
+            if con is True:
                 candidates[key] = item
-
-            # if con is True:
-            #     candidates[key] = item
 
         print('After filter selection, layer candidates: {}'.format([c for c in candidates.keys()]))
         Notes.write('After filter selection, layer candidates: {}'.format([c for c in candidates.keys()]))
@@ -735,8 +685,6 @@ class MatchingNet:
         return bestid
 
     def select_layer(self, dictL, input_og, label, test_x, test_y, val_x=None, val_y=None, quick=False, **kwargs):
-        # if '3' in kwargs['nid']:
-        #     print('')
         layer_id = kwargs['lid']
 
         # layer  dictionary
@@ -755,10 +703,8 @@ class MatchingNet:
         input_size = tuple(input.size()[2:]) if len(input.size()) > 3 else tuple(input.size()[1:])
         first_layer = True if layer_id == 0 and input_size[0] != input_size[1] else False
         if layer_id != 0 and input_size != dictL['input_size'][1:] and self.cfg.RSR.RESIZER_SWITCH:
-            # if layer_id != 0:
             # add
             resize_transformer = ResizeTrans(input_size, dictL['input_size'], is_1d=self.cfg.RSR.Conv1D)
-            # resize_transformer = ResizeTrans(input_size, [int(dictL['input_size'][-1] * 0.5)])
             resizer = resize_transformer.get_resizer()
             layer_dict['resizer'] = resizer
             input = resizer(input)
@@ -958,24 +904,11 @@ class MatchingNet:
         if len(self.score_history) >= 2 and (x - 1) in self.score_history.keys():
             pred = self.estimate_score_history[x - 1]
             true = self.score_history[x - 1]
-            # a = np.array([self.score_history[x - 1], self.score_history[x - 2]])
-            # b = np.array([self.estimate_score_history[x - 1], self.score_history[x - 2]])
-            # c = np.array([0.00, self.score_history[x - 2]])
-            # cossim = 1 - np.dot(a, b) / (norm(a) * norm(b))
-            # a = self.score_history[x - 1] - self.score_history[x - 2]
-            # b = self.estimate_score_history[x - 1] - self.score_history[x - 2]
-            # self.pick_range = self.pick_range + ((pred - true) / pred) * self.pick_range
             if pred < true:
-                # base_cossim = 1 - np.dot(a, c) / (norm(a) * norm(c))
-                # self.pick_range = self.pick_range - (1-(b/a)) * self.pick_range
-                # self.pick_range = self.pick_range - (cossim / base_cossim) * self.pick_range
                 rate = min((abs(true - pred) / pred), 1)
                 self.pick_range = self.pick_range - rate * self.pick_range
             else:
                 rate = min((abs(true - pred) / pred), 1)
-                # base_cossim = 1 - np.dot(b, c) / (norm(b) * norm(c))
-                # self.pick_range = self.pick_range + (1-(a/b)) * self.pick_range
-                # self.pick_range = self.pick_range + (cossim / base_cossim) * self.pick_range
                 self.pick_range = self.pick_range + rate * self.pick_range
 
             print('Truth score history: {}'.format(self.score_history))
@@ -994,7 +927,6 @@ class MatchingNet:
         popt = fit_curve(self.rate_data)
         layers = defaultdict()
         rate = func(x, *popt)
-        # self.estimate_score_history[self.backbone_layer] = round(rate, 4)
         for nid, dictL in layer_pool.items():
             lid = int(nid.split('_')[1])
             layer_dict = self.select_layer(dictL, train_x, train_y, test_x=test_x,
@@ -1046,14 +978,11 @@ class MatchingNet:
         test_prototypes = class_centroids(test_x, test_y)
         distance = np.asarray(paired_distances(train_prototypes, test_prototypes))
         print('Class centroid distance between train and test: {}'.format(distance))
-        # Notes.write('Class centroid distance between train and test: {}'.format(distance))
 
         train_inter = inter_distance(train_prototypes, np.arange(0, len(train_prototypes)))
         test_inter = inter_distance(test_prototypes, np.arange(0, len(test_prototypes)))
         print('Train inter distance for each class: {}, Mean: {:.4f}'.format(train_inter, np.mean(train_inter)))
         print('Test inter distance for each class: {}, Mean: {:.4f}'.format(test_inter, np.mean(test_inter)))
-        # Notes.write('Train inter distance for each class: {}, Mean: {:.4f}'.format(train_inter, np.mean(train_inter)))
-        # Notes.write('Test inter distance for each class: {}, Mean: {:.4f}'.format(test_inter, np.mean(test_inter)))
 
         train_score = class_silhouette_score(train_x, train_y, 4, regression=self.regression)
         train_mean_score = np.round(np.mean(list(train_score.values())), 4)
@@ -1061,8 +990,6 @@ class MatchingNet:
         test_mean_score = np.round(np.mean(list(test_score.values())), 4)
         print('Train S-score for each class: {} , Mean: {:.4f}'.format(train_score, train_mean_score))
         print('Test S-score for each class: {} , Mean: {:.4f}'.format(test_score, test_mean_score))
-        # Notes.write('Train S-score for each class: {} , Mean: {:.4f}'.format(train_score, train_mean_score))
-        # Notes.write('Test S-score for each class: {} , Mean: {:.4f}'.format(test_score, test_mean_score))
 
     # @torch.no_grad()
     def scorer(self, method='KNN', **kwargs):
@@ -1078,7 +1005,6 @@ class MatchingNet:
                 pca.mean_ = pca.mean_[prune_mask]
                 pca.n_features_in_ = len(prune_mask)
 
-        # self.backbone.eval()
 
         for train_x, train_y in self.trainloader:
             output = self.infer_backbone(train_x)
@@ -1088,14 +1014,11 @@ class MatchingNet:
             X = pca.transform(X)
 
         if 'KNN' in method:
-            # classifier = make_pipeline(StandardScaler(), KNeighborsClassifier(n_neighbors=5))
             classifier = KNeighborsClassifier(n_neighbors=5)
         elif 'SVM_linear' in method:
             classifier = SVC(kernel='linear')
-            # classifier = make_pipeline(StandardScaler(), SVC(kernel='linear'))
         elif 'SVM_rbf' in method:
             classifier = SVC(kernel='rbf')
-            # classifier = make_pipeline(StandardScaler(), SVC(kernel='rbf'))
         else:
             raise NotImplementedError("Not Implemented Error")
 
