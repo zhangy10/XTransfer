@@ -105,11 +105,11 @@ what a run does. It is merged on top of the schema in
 
 ```
 xtransfer/            # the method
-  core.py             #   MatchingNet: SRR pipeline + LWS orchestration
-  trans.py            #   connectors, repair/rotation transforms, fine-tuner
-  encoder.py          #   generative transfer module (AutoEncoder connector)
+  core.py             #   SRR pipeline + LWS control
+  trans.py            #   connectors, repair/rotation transforms, fine-tuning
+  encoder.py          #   generative transfer module
   model_builder.py    #   source-model loader
-  torch_pruning/      #   PCA-based channel removal (SRR "Removal")
+  torch_pruning/      #   PCA-based layer channel removal (SRR "Removal")
   config/, paths.py   #   config schema + data/model paths
 dataloader/, modeling/, utils/   # supporting code
 configs/hhar_single.yaml          # run config
