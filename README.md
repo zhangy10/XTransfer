@@ -12,6 +12,7 @@
 [![Static Badge](https://img.shields.io/badge/arXiv-PDF-green?style=flat&logo=arXiv&logoColor=green)](http://arxiv.org/abs/2506.22726) 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Project Page](https://img.shields.io/badge/Project%20Page-XTransfer-yellow)]()
+[![Presentation](https://img.shields.io/badge/Presentation-ICML%202026-blue)](https://icml.cc/virtual/2026/poster/63984)
 
 </div>
 
