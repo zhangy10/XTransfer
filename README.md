@@ -67,7 +67,7 @@ ships only the folder skeleton and the few-shot split file):
 
 ```
 Data/
-  HHAR/                      # HHAR raw data, per-user folders a, b, c, ...
+  Dataset/                      # HHAR raw data, per-user folders a, b, c, ...
 pre-trained_weights/
   miniImageNet/
     model.pth.tar              # source ResNet18 pre-trained on miniImageNet
